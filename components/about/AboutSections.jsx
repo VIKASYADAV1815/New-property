@@ -128,7 +128,7 @@ export default function AboutSections() {
                 </div>
                 
                 {/* bg1.png below Expertise */}
-                <div className="relative w-full h-48 md:h-175 mt-6 opacity-20 pointer-events-none">
+                <div className="relative w-full h-48 md:h-175 mt-6 lg:mt-40 opacity-20 pointer-events-none">
                   <Image src="/bg1.png" alt="Background" fill className="object-contain object-top" />
                 </div>
               </div>

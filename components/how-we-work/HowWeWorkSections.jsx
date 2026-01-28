@@ -45,6 +45,10 @@ const evaluationCriteria = [
   {
     title: "Long-term Usability",
     description: "We assess future usability, resale potential, rental yield prospects, and overall suitability for your specific requirement."
+  },
+  {
+    title: "Market Timing",
+    description: "We analyze current market cycles, upcoming supply, demand trends, and macroeconomic indicators to help you buy at the right time."
   }
 ];
 

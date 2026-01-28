@@ -10,8 +10,8 @@ export default function Footer() {
 
     return (
         <footer className="relative bg-white border-t border-gray-100 pt-20 md:pt-30 pb-0 px-6 overflow-hidden">
-            <div className="absolute bottom-0 md:bottom-15 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[28rem] opacity-10 pointer-events-none z-0">
-                <Image src="/bg4.png" alt="Footer Background" fill className="object-contain object-bottom" />
+            <div className="absolute bottom-0 md:bottom-15 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[30rem] md:h-[28rem] opacity-15 pointer-events-none z-0">
+                <Image src="/bg4.png" alt="Footer Background" fill className="object-contain md:object-bottom object-[center_85%]" />
             </div>
             <div className="relative z-10 max-w-350 mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4  gap-8 md:gap-12 mb-16 md:mb-20">

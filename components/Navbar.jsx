@@ -149,6 +149,7 @@ export default function Navbar() {
             {[
               { label: "Home", href: "/" },
               { label: "About", href: "/about" },
+              { label: "Our Team", href: "/our-team" },
               { label: "How We Work", href: "/how-we-work" },
               { label: "Services", href: "/services" },
               { label: "Insights", href: "/blog" },
@@ -545,6 +546,7 @@ export default function Navbar() {
           {[
             { label: "Home", href: "/" },
             { label: "About", href: "/about" },
+            { label: "Our Team", href: "/our-team" },
             { label: "How We Work", href: "/how-we-work" },
             { label: "Services", href: "/services" },
             { label: "Insights", href: "/blog" },

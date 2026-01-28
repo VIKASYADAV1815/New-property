@@ -36,7 +36,7 @@ export default function Home() {
         <WhyWorkWithUs />
         <FounderPreview />
         <FeatureSection />
-        {/* <Testimonials /> */}
+
         <FAQSection />
         <ConsultationForm />
         <BlogSection />
