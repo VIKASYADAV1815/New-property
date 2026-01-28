@@ -12,9 +12,16 @@ export default function CitySpotlight() {
             <span className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3 block">Our Focus Areas</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-sans tracking-tight">Delhi & Gurgaon Market Expertise</h2>
           </div>
-          <button className="flex items-center gap-2 text-sm font-bold border border-gray-300 px-6 py-3 rounded-full hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all">
-            Discuss Your Requirement <ArrowRight className="w-4 h-4" />
-          </button>
+         <button
+  className="inline-flex items-center gap-2 rounded-full border border-gray-300
+             px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-gray-800
+             transition-all duration-300
+             hover:border-sky-500 hover:bg-sky-500 hover:text-white"
+>
+  Discuss Your Requirement
+  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+</button>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

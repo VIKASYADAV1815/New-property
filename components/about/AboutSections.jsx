@@ -139,7 +139,7 @@ export default function AboutSections() {
         {/* Sections aligned to the statement */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-8">
           <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
-            <div className="absolute inset-0 opacity-80 pointer-events-none">
+            <div className="absolute inset-0 opacity-100 pointer-events-none">
               <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
             </div>
             <div className="relative z-10 p-6 lg:p-8">
@@ -155,7 +155,7 @@ export default function AboutSections() {
           </motion.div>
 
           <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
-            <div className="absolute inset-0 opacity-80 pointer-events-none">
+            <div className="absolute inset-0 opacity-100 pointer-events-none">
               <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
             </div>
             <div className="relative z-10 p-6 lg:p-8">
@@ -173,7 +173,7 @@ export default function AboutSections() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
-            <div className="absolute inset-0 opacity-80 pointer-events-none">
+            <div className="absolute inset-0 opacity-100 pointer-events-none">
               <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
             </div>
             <div className="relative z-10 p-6 lg:p-8">
@@ -188,7 +188,7 @@ export default function AboutSections() {
           </motion.div>
 
           <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
-            <div className="absolute inset-0 opacity-80 pointer-events-none">
+            <div className="absolute inset-0 opacity-100 pointer-events-none">
               <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
             </div>
             <div className="relative z-10 p-6 lg:p-8">

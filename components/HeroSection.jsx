@@ -13,7 +13,7 @@ export default function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   return (
-    <section ref={sectionRef} className="sticky top-0 h-dvh min-h-200 flex flex-col items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="sticky top-0 h-dvh min-h-200 flex flex-col items-center justify-center overflow-visible">
       <motion.div 
         style={{ y }}
         className="absolute inset-0 z-0 pointer-events-none"

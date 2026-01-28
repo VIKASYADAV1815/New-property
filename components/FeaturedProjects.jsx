@@ -40,9 +40,17 @@ export default function FeaturedProjects() {
                     <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                         These are carefully evaluated property options selected based on location strength, developer credibility, construction quality, and long-term value.
                     </p>
-                    <Link href="/community" className="bg-black text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-sky-500 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group">
-                        View All Properties <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
+                  <Link
+  href="/community"
+  className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-4 text-xs font-semibold uppercase tracking-widest text-white
+             transition-all duration-300
+             hover:bg-sky-500 hover:shadow-md
+             shadow-sm"
+>
+  View All Properties
+  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+</Link>
+
                 </motion.div>
             </motion.div>
 

@@ -53,11 +53,16 @@ export default function FounderPreview() {
               His experience spans residential apartments, builder floors, plotted developments, and villas—giving him a clear understanding of how projects are planned, priced, positioned, and delivered. This exposure allows PropertySearch.in to evaluate properties not just as listings, but as real assets with long-term implications.
             </p>
             <Link
-              href="/about"
-              className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-sky-500 transition-all shadow-lg hover:shadow-xl group"
-            >
-              Learn More About the Founder <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+  href="/about"
+  className="group inline-flex items-center gap-2 rounded-full
+             bg-black px-5 py-4 text-xs font-semibold uppercase tracking-widest text-white
+             transition-all duration-300
+             hover:bg-sky-500 hover:shadow-md shadow-sm"
+>
+  Learn More About the Founder
+  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+</Link>
+
           </motion.div>
         </div>
       </div>
