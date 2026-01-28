@@ -138,48 +138,68 @@ export default function AboutSections() {
 
         {/* Sections aligned to the statement */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-8">
-          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-6 lg:p-8 bg-white reveal">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Founder's Experience</h3>
-            <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
-              <li>Residential apartments and group housing projects</li>
-              <li>Builder floors and independent residences</li>
-              <li>Premium and mid-segment housing</li>
-              <li>Plotted developments and land parcels</li>
-              <li>Project planning, execution, and buyer advisory</li>
-            </ul>
+          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
+            <div className="absolute inset-0 opacity-80 pointer-events-none">
+              <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
+            </div>
+            <div className="relative z-10 p-6 lg:p-8">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Founder's Experience</h3>
+              <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
+                <li>Residential apartments and group housing projects</li>
+                <li>Builder floors and independent residences</li>
+                <li>Premium and mid-segment housing</li>
+                <li>Plotted developments and land parcels</li>
+                <li>Project planning, execution, and buyer advisory</li>
+              </ul>
+            </div>
           </motion.div>
 
-          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-6 lg:p-8 bg-white reveal">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">What We Deal In</h3>
-            <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
-              <li>Residential apartments & group housing projects</li>
-              <li>Builder floors (1 BHK to 3 BHK and beyond)</li>
-              <li>Independent houses and villas</li>
-              <li>Residential plots and land investments</li>
-              <li>Select under-construction and ready-to-move developments</li>
-            </ul>
-            <p className="mt-4 text-gray-600 leading-relaxed">Each property is assessed on location strength, developer credibility, construction quality, pricing logic, and future usability.</p>
+          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
+            <div className="absolute inset-0 opacity-80 pointer-events-none">
+              <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
+            </div>
+            <div className="relative z-10 p-6 lg:p-8">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">What We Deal In</h3>
+              <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
+                <li>Residential apartments & group housing projects</li>
+                <li>Builder floors (1 BHK to 3 BHK and beyond)</li>
+                <li>Independent houses and villas</li>
+                <li>Residential plots and land investments</li>
+                <li>Select under-construction and ready-to-move developments</li>
+              </ul>
+              <p className="mt-4 text-gray-600 leading-relaxed">Each property is assessed on location strength, developer credibility, construction quality, pricing logic, and future usability.</p>
+            </div>
           </motion.div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-6 lg:p-8 bg-white reveal">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Our Advisory Philosophy</h3>
-            <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
-              <li>Honest evaluation over aggressive selling</li>
-              <li>Market clarity over exaggerated claims</li>
-              <li>Long-term suitability over short-term hype</li>
-            </ul>
-            <p className="mt-4 text-gray-600 leading-relaxed">For residence or investment, we recommend right-fit properties backed by logic and transparency.</p>
+          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
+            <div className="absolute inset-0 opacity-80 pointer-events-none">
+              <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
+            </div>
+            <div className="relative z-10 p-6 lg:p-8">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Our Advisory Philosophy</h3>
+              <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
+                <li>Honest evaluation over aggressive selling</li>
+                <li>Market clarity over exaggerated claims</li>
+                <li>Long-term suitability over short-term hype</li>
+              </ul>
+              <p className="mt-4 text-gray-600 leading-relaxed">For residence or investment, we recommend right-fit properties backed by logic and transparency.</p>
+            </div>
           </motion.div>
 
-          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-6 lg:p-8 bg-white reveal">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Vision of the Founder</h3>
-            <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
-              <li>Create a reputation rooted in integrity and insight</li>
-              <li>Bridge the gap between developers and end-users responsibly</li>
-              <li>Elevate advisory standards through knowledge, discipline, and trust</li>
-            </ul>
-            <p className="mt-4 text-gray-600 leading-relaxed">PropertySearch.in aims to grow as a relationship-driven brand, not a volume-driven portal.</p>
+          <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="border border-gray-200 rounded-2xl p-0 bg-white reveal relative overflow-hidden">
+            <div className="absolute inset-0 opacity-80 pointer-events-none">
+              <Image src="/bg9.avif" alt="Background" fill className="object-cover" />
+            </div>
+            <div className="relative z-10 p-6 lg:p-8">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Vision of the Founder</h3>
+              <ul className="text-gray-600 space-y-3 list-disc list-inside leading-relaxed">
+                <li>Create a reputation rooted in integrity and insight</li>
+                <li>Bridge the gap between developers and end-users responsibly</li>
+                <li>Elevate advisory standards through knowledge, discipline, and trust</li>
+              </ul>
+              <p className="mt-4 text-gray-600 leading-relaxed">PropertySearch.in aims to grow as a relationship-driven brand, not a volume-driven portal.</p>
+            </div>
           </motion.div>
         </div>
 
