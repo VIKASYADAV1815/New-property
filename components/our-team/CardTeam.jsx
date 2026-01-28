@@ -105,7 +105,7 @@ export default function CardTeam() {
           </motion.div>
         </div>
 
-        <div className="mt-16 reveal">
+        {/* <div className="mt-16 reveal">
           <div className="rounded-2xl border border-gray-200 p-6 md:p-8 bg-gray-50">
             <h3 className="text-xl md:text-2xl font-bold text-gray-900">Get Advisory-Led Guidance</h3>
             <p className="text-gray-600 mt-2">Share your requirement and we will shortlist right-fit options aligned to your goals. No redirects—everything happens on this page.</p>
@@ -116,7 +116,7 @@ export default function CardTeam() {
             </div>
             <button className="mt-4 px-6 py-3 rounded-lg bg-black text-white text-sm font-bold hover:bg-gray-800">Request Shortlist</button>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );
