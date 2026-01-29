@@ -71,7 +71,7 @@ export default function ServicesSections() {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
                 </div>
 
                 {/* Content */}
@@ -103,9 +103,13 @@ export default function ServicesSections() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-20 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-3xl p-8 md:p-12"
+          className="mt-20 relative rounded-3xl p-8 md:p-12 overflow-hidden"
         >
-          <div className="text-center mb-8">
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-50"
+            style={{ backgroundImage: "url('/bg2.webp')" }}
+          />
+          <div className="relative text-center mb-8">
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Investment-Focused Purchases
             </h3>

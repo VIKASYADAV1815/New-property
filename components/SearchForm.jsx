@@ -34,7 +34,7 @@ export default function SearchForm() {
   }, [location]);
 
   return (
-    <div className="max-w-4xl  mx-auto w-full px-4 sm:px-0 space-y-3 relative z-50">
+    <div className="max-w-4xl  mx-auto w-full px-4 sm:px-0 space-y-3 relative">
 
       {/* Purpose Toggle */}
       <div className="flex justify-center">
@@ -100,7 +100,7 @@ export default function SearchForm() {
               />
 
               {openSuggest && (filteredCommunities.length > 0 || filteredProperties.length > 0) && (
-                <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl bg-white shadow-xl border border-white/20 overflow-hidden backdrop-blur-md z-[100]">
+                <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl bg-white shadow-xl border border-white/20 overflow-hidden backdrop-blur-md z-9999">
                   <div className="max-h-72 overflow-auto p-2">
                     {filteredCommunities.length > 0 && (
                       <div className="mb-2">

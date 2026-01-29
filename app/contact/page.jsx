@@ -1,5 +1,6 @@
 import PageHero from "@/components/common/PageHero";
 import ContactSections from "@/components/contact/ContactSections";
+import FAQSection from "@/components/FAQSection";
 
 export default function ContactPage() {
   return (
@@ -10,6 +11,7 @@ export default function ContactPage() {
         image="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600&auto=format&fit=crop"
       />
       <ContactSections />
+      <FAQSection />
     </>
   );
 }

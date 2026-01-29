@@ -1,9 +1,21 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
+import { 
+  Mail, 
+  Phone, 
+  MapPin, 
+  ArrowRight, 
+  ChevronDown, 
+  Headphones, 
+  ShieldCheck, 
+  Quote,
+  Clock,
+  Send,
+  Maximize2
+} from "lucide-react";
 
 export default function ContactSections() {
   const sectionRef = useRef(null);
@@ -14,15 +26,13 @@ export default function ContactSections() {
 
     const ctx = gsap.context(() => {
       const elements = gsap.utils.toArray(".reveal");
-
-      gsap.set(elements, { opacity: 0, y: 24 });
-
+      gsap.set(elements, { opacity: 0, y: 20 });
       gsap.to(elements, {
         opacity: 1,
         y: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: "power3.out",
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power2.out",
       });
     }, sectionRef);
 
@@ -30,160 +40,180 @@ export default function ContactSections() {
   }, [pathname]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative z-10 bg-white py-16 md:py-24"
-    >
+    <section ref={sectionRef} className="relative z-10 bg-white py-16 md:py-24">
       <div className="max-w-6xl mx-auto px-6">
+        
         {/* ---------- HEADER ---------- */}
-        <div className="mb-14 reveal">
-          <span className="block text-sm font-semibold uppercase tracking-widest text-gray-500 mb-3">
-            Contact Us
+        <div className="mb-12 reveal">
+          <span className="block text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">
+            Inquiry & Support
           </span>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
-            Let’s Find the Right Property for You
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight">
+            Ready to start your <br />
+            <span className="text-gray-400 font-serif italic">Property Journey?</span>
           </h1>
-          <p className="max-w-2xl text-lg text-gray-600 leading-relaxed">
-            Connect with our advisory team for curated opportunities,
-            transparent pricing, and long-term value creation.
-          </p>
         </div>
 
-        {/* ---------- VALUE PROPOSITION ---------- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {[
-            {
-              title: "Curated Properties",
-              desc: "Only verified residential and investment-grade listings.",
-            },
-            {
-              title: "Advisory-First",
-              desc: "No sales pressure — just clear, data-backed guidance.",
-            },
-            {
-              title: "End-to-End Support",
-              desc: "From site visits to documentation and handover.",
-            },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="reveal border border-gray-200 rounded-2xl p-6 lg:p-8 bg-white"
-            >
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                {item.title}
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {item.desc}
-              </p>
-            </motion.div>
-          ))}
+        {/* ---------- SERVICE COMMITMENT CARD ---------- */}
+        <div className="mt-10 mb-16 reveal">
+          <div className="rounded-2xl border border-gray-200 bg-linear-to-br from-white to-gray-50 p-8 md:p-10 shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+              <div className="lg:col-span-1">
+                <Quote className="w-6 h-6 text-gray-300 mb-4" />
+                <div className="text-xl md:text-2xl font-serif italic text-gray-900 leading-relaxed">
+                  "Our goal isn't just to close a deal, but to ensure you have the data and peace of mind to make the right move."
+                </div>
+                <div className="mt-6">
+                  <div className="text-sm font-bold text-gray-900">Service Standards</div>
+                  <div className="text-xs text-gray-500">PropertySearch Advisory Team</div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { label: "Response Time", val: "< 2hr", sub: "During Business Hours" },
+                    { label: "Client Rating", val: "4.9/5", sub: "Based on 500+ Reviews" },
+                    { label: "Market Access", val: "Direct", sub: "No Middlemen Fees" }
+                  ].map((stat, i) => (
+                    <div key={i} className="rounded-xl border border-gray-200 bg-white p-5">
+                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</div>
+                      <div className="text-2xl font-bold text-gray-900 mt-1">{stat.val}</div>
+                      <div className="text-[11px] text-gray-500 mt-1">{stat.sub}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="rounded-xl border border-gray-200 bg-white p-6">
+                    <div className="flex items-center gap-2 text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">
+                      <Headphones className="w-4 h-4 text-gray-400" /> Support Desk
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-3">
+                      <li className="flex gap-3"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5" /> Virtual Property Tours</li>
+                      <li className="flex gap-3"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5" /> Documentation Assistance</li>
+                    </ul>
+                  </div>
+                  <div className="rounded-xl border border-gray-200 bg-white p-6">
+                    <div className="flex items-center gap-2 text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">
+                      <ShieldCheck className="w-4 h-4 text-gray-400" /> Reliability
+                    </div>
+                    <p className="text-sm text-gray-500 leading-relaxed">
+                      Every inquiry is handled by a senior advisor. We ensure 100% privacy and zero spam calls.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* ---------- CONTACT INFO ---------- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="reveal border border-gray-200 rounded-2xl p-6 lg:p-8"
-          >
-            <h4 className="text-xl font-bold text-gray-900 mb-3">Office</h4>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Golf Course Road<br />
-              Gurugram, Haryana
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="reveal border border-gray-200 rounded-2xl p-6 lg:p-8"
-          >
-            <h4 className="text-xl font-bold text-gray-900 mb-3">Phone</h4>
-            <p className="text-gray-600 text-sm">
-              +91 98765 43210<br />
-              Mon – Sat, 9:00 AM – 7:00 PM
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="reveal border border-gray-200 rounded-2xl p-6 lg:p-8"
-          >
-            <h4 className="text-xl font-bold text-gray-900 mb-3">Email</h4>
-            <p className="text-gray-600 text-sm">
-              hello@propertysearch.in
-            </p>
-          </motion.div>
-        </div>
-
-        {/* ---------- CONTACT FORM ---------- */}
-        <div className="reveal max-w-3xl mx-auto">
-          <div className="border border-gray-200 rounded-2xl p-6 md:p-8 lg:p-10 shadow-sm">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-              Schedule a Private Consultation
+        {/* ---------- FORM & CONTACT DETAILS ---------- */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch reveal">
+          
+          {/* Form Side - Using flex-col h-full to eliminate space */}
+          <div className="lg:col-span-7 rounded-2xl border border-gray-200 bg-linear-to-br from-white to-gray-50 p-8 md:p-10 shadow-sm flex flex-col h-full">
+            <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+              <Send className="w-5 h-5" /> Detailed Inquiry
             </h3>
-            <p className="text-gray-600 mb-8 text-sm md:text-base">
-              Share your requirements and our advisors will reach out with
-              tailored property options.
-            </p>
-
-            <form className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-                />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-                />
+            <form className="space-y-6 grow flex flex-col">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Your Name</label>
+                  <input type="text" placeholder="John Doe" className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-black transition" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Email</label>
+                  <input type="email" placeholder="john@example.com" className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-black transition" />
+                </div>
               </div>
 
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <select className="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm bg-white">
-                  <option>Budget Range</option>
-                  <option>Under ₹1 Cr</option>
-                  <option>₹1 Cr – ₹3 Cr</option>
-                  <option>₹3 Cr – ₹5 Cr</option>
-                  <option>₹5 Cr+</option>
-                </select>
-
-                <select className="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm bg-white">
-                  <option>Purpose</option>
-                  <option>Self Use</option>
-                  <option>Investment</option>
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Property Interest</label>
+                  <div className="relative">
+                    <select className="w-full appearance-none px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none cursor-pointer">
+                      <option>Luxury Residential</option>
+                      <option>Commercial Office</option>
+                      <option>Retail Space</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Best Time to Call</label>
+                  <div className="relative">
+                    <select className="w-full appearance-none px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none cursor-pointer">
+                      <option>Morning (9am - 12pm)</option>
+                      <option>Afternoon (1pm - 5pm)</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
               </div>
 
-              <textarea
-                rows={4}
-                placeholder="Tell us more about your requirement..."
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-black"
-              />
+              <div className="space-y-1.5 grow flex flex-col">
+                <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Requirements</label>
+                <textarea placeholder="Tell us about location, size, or specific amenities..." className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none resize-none focus:border-black transition grow min-h-30" />
+              </div>
 
-              <button
-                type="submit"
-                className="w-full py-3 rounded-lg bg-black text-white font-semibold text-sm hover:bg-gray-800 transition"
-              >
-                Request Consultation
+              <button className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold text-sm hover:bg-black transition-all flex items-center justify-center gap-2 group mt-4">
+                Send Request
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
           </div>
+
+          {/* Details & Map Side */}
+          <div className="lg:col-span-5 flex flex-col gap-6 h-full">
+            {/* Map Integration */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-2 shadow-sm overflow-hidden group h-55 relative shrink-0">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.318465451671!2d77.0898!3d28.4394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d18e800000001%3A0x0!2zMjjCsDI2JzIyLjEiTiA3N8KwMDUnMjMuMyJF!5e0!3m2!1sen!2sin!4v1600000000000"
+                className="w-full h-full rounded-xl grayscale-[0.6] contrast-[1.1] group-hover:grayscale-0 transition-all duration-700"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 grow">
+              <h4 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-6">Reach Us Directly</h4>
+              <div className="space-y-5">
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 text-gray-400 shrink-0"><MapPin className="w-5 h-5" /></div>
+                  <div>
+                    <div className="text-[10px] font-bold uppercase text-gray-400">Head Office</div>
+                    <div className="text-sm font-medium text-gray-900 mt-0.5">Golf Course Road, DLF Phase 5, Gurugram</div>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 text-gray-400 shrink-0"><Phone className="w-5 h-5" /></div>
+                  <div>
+                    <div className="text-[10px] font-bold uppercase text-gray-400">Phone</div>
+                    <div className="text-sm font-medium text-gray-900 mt-0.5">+91 98765 43210</div>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 text-gray-400 shrink-0"><Mail className="w-5 h-5" /></div>
+                  <div>
+                    <div className="text-[10px] font-bold uppercase text-gray-400">Email</div>
+                    <div className="text-sm font-medium text-gray-900 mt-0.5">hello@propertysearch.in</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-gray-900 p-6 text-white relative overflow-hidden shrink-0">
+              <Clock className="absolute -right-4 -top-4 w-20 h-20 text-white/5 rotate-12" />
+              <h4 className="font-bold mb-1 text-base">Operational Hours</h4>
+              <p className="text-[11px] text-gray-400 mb-4 leading-relaxed">Mon to Sat (9:00 AM - 7:00 PM).</p>
+              <button className="w-full py-2.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold text-[10px] uppercase tracking-widest transition">
+                Request a Callback
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

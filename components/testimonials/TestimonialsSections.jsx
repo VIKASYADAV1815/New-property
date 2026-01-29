@@ -1,132 +1,225 @@
 "use client";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { Quote } from "lucide-react";
 
-const testimonials = [
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { Quote, Star, ShieldCheck, ChevronLeft, ChevronRight, ArrowRight, Users, Clock, CalendarCheck } from "lucide-react";
+
+const allTestimonials = [
   {
+    id: 1,
     name: "Rohit Sharma",
-    location: "Gurgaon",
+    location: "Portfolio Investor • Gurgaon",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
-    text: "PropertySearch.in provided honest evaluation and clear guidance throughout our property search. Akshit's deep understanding of developer credibility, construction quality, and long-term value helped us make an informed decision. The advisory approach, focused on transparency over aggressive selling, gave us confidence in our investment.",
-    focus: "Trust & Transparency"
+    text: "PropertySearch.in provided an honest evaluation that changed our entire perspective. Akshit's understanding of developer credibility helped us secure our future without the usual sales pressure.",
+    focus: "Strategic Entry"
   },
   {
+    id: 2,
+    name: "Neha Singh",
+    location: "Homeowner • Delhi NCR",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop",
+    text: "The relationship-driven approach made all the difference. They took time to understand our requirement and provided decision support with transparency. We felt guided, not pressured.",
+    focus: "Relationship-First"
+  },
+  {
+    id: 3,
     name: "Priya Mehta",
     location: "New Delhi",
+    text: "They didn't just show properties—they evaluated location strength and pricing logic to avoid short-term hype. Truly data-driven advisory.",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop",
-    text: "What impressed me most was the thorough evaluation process. PropertySearch.in didn't just show us properties—they evaluated each one on location strength, pricing logic, and future usability. This helped us avoid properties that looked good but weren't right for our long-term needs.",
     focus: "Thorough Evaluation"
   },
   {
+    id: 4,
     name: "Amit Kumar",
     location: "Gurgaon",
+    text: "Market intelligence that treats real estate as a critical decision, not just a deal. Refreshing transparency in a crowded market.",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
-    text: "As an investor, I needed clarity on which properties would deliver long-term value. PropertySearch.in's market intelligence and honest evaluation helped me make smart investment decisions. They treated real estate as a decision, not just a deal, which is exactly what I needed.",
     focus: "Investment Guidance"
   },
   {
-    name: "Neha Singh",
-    location: "Delhi NCR",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop",
-    text: "The relationship-driven approach made all the difference. PropertySearch.in took time to understand our requirement, evaluated multiple options, and provided decision support with transparency. We felt guided, not pressured, which is rare in real estate advisory.",
-    focus: "Relationship-Driven"
-  },
-  {
+    id: 5,
     name: "Rajesh Verma",
     location: "Gurgaon",
+    text: "Akshit's 20+ years of experience helped us evaluate properties from a developer's perspective. Invaluable technical insight.",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop",
-    text: "Akshit's 20+ years of experience showed in every interaction. His understanding of how projects are planned, priced, and delivered helped us evaluate properties from a developer's perspective. This insight was invaluable in making our final decision.",
     focus: "Expert Experience"
-  },
-  {
-    name: "Sneha Patel",
-    location: "New Delhi",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
-    text: "PropertySearch.in helped us navigate the complex real estate market with clarity. Their focus on long-term suitability over short-term hype ensured we made a decision we're confident about. The advisory process was structured, transparent, and truly helpful.",
-    focus: "Clarity & Confidence"
   }
 ];
 
-export default function TestimonialsSections() {
+export default function TestimonialsSection() {
+  const [data, setData] = useState(allTestimonials);
+  const timerRef = useRef(null);
+
+  // Function to clear and restart the 5s timer
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      rotateNext();
+    }, 5000);
+  }, []);
+
+  const rotateNext = useCallback(() => {
+    setData((prev) => {
+      const newData = [...prev];
+      const first = newData.shift();
+      if (first) newData.push(first);
+      return newData;
+    });
+  }, []);
+
+  const rotatePrev = useCallback(() => {
+    resetTimer(); // Reset on manual interaction
+    setData((prev) => {
+      const newData = [...prev];
+      const last = newData.pop();
+      if (last) newData.unshift(last);
+      return newData;
+    });
+  }, [resetTimer]);
+
+  const handleManualClick = (idx) => {
+    resetTimer(); // Reset on manual interaction
+    setData((prev) => {
+      const newData = [...prev];
+      // Move clicked item and everything before it to the end
+      const movedItems = newData.splice(0, idx + 1);
+      return [...newData, ...movedItems];
+    });
+  };
+
+  // Initial timer setup
+  useEffect(() => {
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [resetTimer]);
+
+  const featured = data[0];
+  const secondary = data.slice(1, 4);
+  const smoothSpring = { type: "spring", stiffness: 260, damping: 28 };
+
   return (
-    <section className="relative z-10 py-16 md:py-24 bg-white">
+    <section className="relative z-10 py-24 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Introduction */}
-        <div className="text-center mb-16 md:mb-20">
-          <span className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3 block">Client Experiences</span>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-sans tracking-tight mb-4">
-            What Our Clients Say
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Our clients value trust, clarity, transparency, and informed decision-making. Here's what they have to say about their experience with PropertySearch.in.
-          </p>
-        </div>
-
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {testimonials.map((testimonial, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all"
-            >
-              <div className="flex items-start gap-4 mb-4">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900">{testimonial.name}</h3>
-                  <p className="text-sm text-gray-500">{testimonial.location}</p>
-                </div>
-              </div>
-              
-              <div className="relative mb-4">
-                <Quote className="w-8 h-8 text-gray-200 absolute -top-2 -left-2" />
-                <p className="text-gray-600 leading-relaxed italic relative z-10">
-                  "{testimonial.text}"
-                </p>
-              </div>
-              
-              <div className="pt-4 border-t border-gray-100">
-                <span className="text-xs font-bold text-sky-600 uppercase tracking-wider">
-                  {testimonial.focus}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-3xl p-8 md:p-12 text-center"
-        >
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            Ready to Experience Our Advisory Approach?
-          </h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
-            Join our clients who have made well-informed property decisions with our guidance.
-          </p>
-          <a
-            href="/contact"
-            className="inline-block bg-black text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-sky-500 transition-all shadow-lg hover:shadow-xl"
+        
+        {/* ---------- ATTRACTIVE HEADER ---------- */}
+        <div className="mb-16 text-center md:text-left">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 mb-4 justify-center md:justify-start"
           >
-            Schedule Consultation
-          </a>
-        </motion.div>
+            <span className="h-0.5 w-6 bg-gray-900"></span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">The Proof of Trust</span>
+          </motion.div>
+          <h2 className="text-4xl md:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1]">
+            Expertise meets <br />
+            <span className="text-gray-400 font-serif italic">Unwavering Integrity.</span>
+          </h2>
+        </div>
+
+        {/* ---------- TESTIMONIAL GRID ---------- */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 mb-10 items-stretch">
+          
+          <div className="lg:col-span-7 relative flex h-full min-h-115">
+            {/* Buttons */}
+            <button onClick={rotatePrev} className="absolute -left-5.5 top-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full bg-white border border-gray-100 shadow-xl flex items-center justify-center hover:bg-black hover:text-white transition-all active:scale-90">
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button onClick={() => { rotateNext(); resetTimer(); }} className="absolute -right-5.5 top-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full bg-white border border-gray-100 shadow-xl flex items-center justify-center hover:bg-black hover:text-white transition-all active:scale-90">
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={featured.name}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={smoothSpring}
+                className="w-full rounded-[2.5rem] border border-gray-100 bg-white p-10 shadow-2xl shadow-gray-200/30 flex flex-col justify-between"
+              >
+                <div>
+                  <Quote className="w-10 h-10 text-gray-50 mb-8" />
+                  <blockquote className="text-xl md:text-2xl font-serif italic text-gray-900 leading-relaxed">
+                    "{featured.text}"
+                  </blockquote>
+                </div>
+                <div className="flex items-center gap-4 pt-8 border-t border-gray-100 mt-8">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-100 shadow-sm">
+                    <Image src={featured.image} alt={featured.name} fill className="object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="text-md font-bold text-gray-900 leading-none">{featured.name}</h4>
+                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1.5">{featured.location}</p>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Right Side Cards */}
+          <div className="lg:col-span-5 flex flex-col justify-center gap-4">
+            {secondary.map((item, idx) => (
+              <motion.div
+                key={item.name}
+                onClick={() => handleManualClick(idx)}
+                layout
+                className={`cursor-pointer rounded-2xl border p-5 transition-all duration-300 relative
+                  ${idx === 1 
+                    ? 'bg-white border-gray-200 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.06)] scale-[1.01] z-10' 
+                    : 'bg-gray-50/50 border-transparent opacity-40 hover:opacity-100 hover:bg-white'
+                  }`}
+              >
+                <p className="text-[12px] text-gray-600 italic line-clamp-2 leading-snug">"{item.text}"</p>
+                <div className="flex items-center justify-between mt-3">
+                  <span className="text-[10px] font-bold text-gray-900">{item.name}</span>
+                  <span className="text-[8px] font-extrabold px-2 py-0.5 bg-white border border-gray-100 rounded text-gray-400 uppercase tracking-widest">{item.focus}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ---------- REDESIGNED MINIMAL ADVISORY SECTION ---------- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* CTA Box */}
+          <div className="bg-gray-50/50 border border-gray-100 rounded-4xl p-8 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-3 text-gray-400">
+              <CalendarCheck className="w-3.5 h-3.5" />
+              <span className="text-[9px] font-bold uppercase tracking-widest">Consultation Request</span>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
+              Start your <span className="text-gray-400 font-serif italic">Clean Evaluation.</span>
+            </h3>
+            <button className="flex items-center justify-center bg-gray-900 text-white px-8 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-black transition-all w-fit gap-4 group">
+              Book Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+
+          {/* Minimal Grid Stats */}
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { val: "20+", label: "Years Exp", icon: Clock },
+              { val: "500+", label: "Deals", icon: ShieldCheck },
+              { val: "98%", label: "Success", icon: Star },
+              { val: "120+", label: "Investors", icon: Users }
+            ].map((stat, i) => (
+              <div key={i} className="bg-white border border-gray-100 rounded-3xl p-5 flex flex-col justify-between hover:shadow-sm transition-all group">
+                <stat.icon className="w-4 h-4 text-gray-300 group-hover:text-gray-900 transition-colors" />
+                <div>
+                  <div className="text-xl font-bold text-gray-900">{stat.val}</div>
+                  <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );
 }
-

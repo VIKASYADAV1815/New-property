@@ -1,21 +1,12 @@
 "use client";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { blogs } from "@/data/blogs";
-
-const filters = ["All", "Trending News", "Area Guide", "Budget Homes", "Finance", "Investment", "Buying Guide", "Smart Home", "Lifestyle"];
-
+ 
 export default function BlogSection() {
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  const filteredBlogs = activeFilter === "All" 
-    ? blogs 
-    : blogs.filter(blog => blog.tag === activeFilter);
-  
-  const displayBlogs = filteredBlogs.slice(0, 6);
+  const displayBlogs = blogs.slice(0, 3);
 
   return (
     <section className="py-16 md:py-24 bg-gray-50">
@@ -23,22 +14,6 @@ export default function BlogSection() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-12 gap-6 md:gap-0">
             <div>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-sans tracking-tight mb-6">Insights & Market Intelligence</h2>
-                {/* Capsule Filters */}
-                <div className="flex flex-wrap gap-3">
-                    {filters.map((filter) => (
-                        <button
-                            key={filter}
-                            onClick={() => setActiveFilter(filter)}
-                            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${
-                                activeFilter === filter 
-                                ? "bg-sky-500 text-white border-sky-500" 
-                                : "bg-white text-gray-500 border-gray-200 hover:border-sky-500 hover:text-sky-500"
-                            }`}
-                        >
-                            {filter}
-                        </button>
-                    ))}
-                </div>
             </div>
             
             <Link href="/blog" className="flex items-center gap-2 text-sm font-bold border border-gray-300 px-6 py-2 rounded-full hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all whitespace-nowrap">

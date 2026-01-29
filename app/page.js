@@ -9,7 +9,6 @@ import CitySpotlight from "@/components/CitySpotlight";
 import ProjectMotion from "@/components/ProjectMotion";
 import BentoGrid from "@/components/BentoGrid";
 // import Testimonials from "@/components/Testimonials";
-import FAQSection from "@/components/FAQSection";
 import ConsultationForm from "@/components/ConsultationForm";
 import BlogSection from "@/components/BlogSection";
 import FloatingActions from "@/components/FloatingActions";
@@ -36,8 +35,6 @@ export default function Home() {
         <WhyWorkWithUs />
         <FounderPreview />
         <FeatureSection />
-
-        <FAQSection />
         <ConsultationForm />
         <BlogSection />
       </div>
