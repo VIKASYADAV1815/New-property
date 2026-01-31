@@ -49,7 +49,7 @@ export default function BlogMasonry() {
 
   const featuredProperties = [
     {
-      title: "Palm Residency, Gurugram",
+      title: "Palm Residency, Gurgaon",
       tag: "Luxury Villa",
       price: "₹4.2 Cr",
       image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
@@ -61,10 +61,10 @@ export default function BlogMasonry() {
       image: "https://images.unsplash.com/photo-1705224981158-fc278e4d68fd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "The Palms, Noida",
+      title: "The Palms, Dehradun",
       tag: "Modern Villa",
       price: "₹3.5 Cr",
-      image: "https://images.unsplash.com/photo-1599423300746-b62533397364?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1200&auto=format&fit=crop",
     },
   ];
 

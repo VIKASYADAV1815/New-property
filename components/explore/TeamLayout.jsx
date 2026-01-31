@@ -35,7 +35,7 @@ export default function TeamLayout({ items }) {
               <h3 className="text-xl font-bold text-gray-900">{member.title || "Amit Verma"}</h3>
               <p className="text-sky-600 font-medium text-sm">Senior Consultant</p>
               <p className="text-gray-500 text-sm mt-2">
-                Specializing in luxury residential properties in South Delhi and Gurugram with 10+ years of experience.
+                Specializing in luxury residential properties in South Delhi and Gurgaon with 10+ years of experience.
               </p>
             </div>
           ))}

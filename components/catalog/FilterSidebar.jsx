@@ -26,7 +26,7 @@ export default function FilterSidebar({ filters, setFilters, onClear }) {
             {[
               { label: "Delhi, India", key: "Delhi" },
               { label: "Gurgaon, India", key: "Gurgaon" },
-              { label: "Mumbai, India", key: "Mumbai" },
+              { label: "Dehradun, India", key: "Dehradun" },
             ].map((l) => (
               <label key={l.key} className="flex items-center gap-2">
                 <input
@@ -43,40 +43,36 @@ export default function FilterSidebar({ filters, setFilters, onClear }) {
 
         <section className="pt-6 border-t border-gray-200">
           <h4 className="text-sm font-bold text-gray-900">Price Range</h4>
-          <div className="mt-3 space-y-2 text-sm text-gray-700">
-            {[
-              { key: "under", label: "Under ₹1,00,000" },
-              { key: "mid", label: "₹1,00,000 - ₹15,00,000" },
-              { key: "over", label: "More Than ₹15,00,000" },
-              { key: "custom", label: "Custom" },
-            ].map((p) => (
-              <label key={p.key} className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="price"
-                  checked={filters.priceBand === p.key}
-                  onChange={() => setPriceBand(p.key)}
-                  className="accent-sky-600"
-                />
-                {p.label}
-              </label>
-            ))}
-          </div>
-          {filters.priceBand === "custom" && (
-            <div className="mt-3">
-              <input
-                type="range"
-                min="10000000"
-                max="1000000000"
-                value={filters.customPrice || 1000000000}
-                onChange={(e) => setCustomPrice(Number(e.target.value))}
-                className="w-full"
-              />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>₹1Cr</span><span>₹100Cr</span>
-              </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-gray-700">
+            <div>
+              <div className="text-xs text-gray-500 mb-1">Min</div>
+              <select
+                value={String(filters.priceRange?.min || 5000000)}
+                onChange={(e) => setFilters({ ...filters, priceRange: { ...(filters.priceRange || {}), min: Number(e.target.value) } })}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+              >
+                <option value={5000000}>₹ 50 Lakhs</option>
+                <option value={7500000}>₹ 75 Lakhs</option>
+                <option value={10000000}>₹ 1 Cr</option>
+                <option value={20000000}>₹ 2 Cr</option>
+                <option value={50000000}>₹ 5 Cr</option>
+              </select>
             </div>
-          )}
+            <div>
+              <div className="text-xs text-gray-500 mb-1">Max</div>
+              <select
+                value={String(filters.priceRange?.max || 200000000)}
+                onChange={(e) => setFilters({ ...filters, priceRange: { ...(filters.priceRange || {}), max: Number(e.target.value) } })}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+              >
+                <option value={20000000}>₹ 2 Cr</option>
+                <option value={50000000}>₹ 5 Cr</option>
+                <option value={100000000}>₹ 10 Cr</option>
+                <option value={150000000}>₹ 15 Cr</option>
+                <option value={200000000}>₹ 20 Cr</option>
+              </select>
+            </div>
+          </div>
         </section>
 
         <section className="pt-6 border-t border-gray-200">

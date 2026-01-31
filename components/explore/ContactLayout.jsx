@@ -69,7 +69,7 @@ export default function ContactLayout() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-1">Visit Us</h4>
-                    <p className="text-gray-600">Golf Course Road, Sector 42<br />Gurugram, Haryana</p>
+                    <p className="text-gray-600">Golf Course Road, Sector 42<br />Gurgaon, Haryana</p>
                   </div>
                 </div>
 

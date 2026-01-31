@@ -184,7 +184,7 @@ export default function ContactSections() {
                   <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 text-gray-400 shrink-0"><MapPin className="w-5 h-5" /></div>
                   <div>
                     <div className="text-[10px] font-bold uppercase text-gray-400">Head Office</div>
-                    <div className="text-sm font-medium text-gray-900 mt-0.5">Golf Course Road, DLF Phase 5, Gurugram</div>
+                    <div className="text-sm font-medium text-gray-900 mt-0.5">Golf Course Road, DLF Phase 5, Gurgaon</div>
                   </div>
                 </div>
                 <div className="flex gap-4">

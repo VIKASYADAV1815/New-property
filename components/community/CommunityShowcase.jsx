@@ -81,12 +81,22 @@ export default function CommunityShowcase({ community }) {
     return beds ? `${beds} BHK` : "Luxury Home";
   }, [activeProperty?.beds]);
   const heroImages = useMemo(() => {
+    const gallery = activeProperty?.images;
+    if (Array.isArray(gallery) && gallery.length > 0) return gallery;
     const base = activeProperty?.image || community.image;
     return [base, community.image, base];
-  }, [activeProperty?.image, community.image]);
+  }, [activeProperty?.images, activeProperty?.image, community.image]);
   const [heroIdx, setHeroIdx] = useState(0);
   const nextHero = () => setHeroIdx((i) => (i + 1) % heroImages.length);
   const prevHero = () => setHeroIdx((i) => (i - 1 + heroImages.length) % heroImages.length);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  useEffect(() => {
+    if (lightboxOpen || heroImages.length <= 1) return;
+    const t = setInterval(() => {
+      setHeroIdx((i) => (i + 1) % heroImages.length);
+    }, 3000);
+    return () => clearInterval(t);
+  }, [heroImages.length, lightboxOpen]);
 
   const onSelect = (p) => {
     if (!p || p.id === activeProperty?.id) return;
@@ -171,7 +181,14 @@ export default function CommunityShowcase({ community }) {
                     transition={{ duration: 0.25 }}
                     className="relative w-full aspect-video"
                   >
-                    <Image src={heroImages[heroIdx]} alt={activeProperty?.title || community.name} fill className="object-cover" priority />
+                    <Image
+                      src={heroImages[heroIdx]}
+                      alt={activeProperty?.title || community.name}
+                      fill
+                      className="object-cover cursor-zoom-in"
+                      priority
+                      onClick={() => setLightboxOpen(true)}
+                    />
                     <div className="absolute inset-y-0 left-0 flex items-center">
                       <button
                         onClick={prevHero}
@@ -189,6 +206,16 @@ export default function CommunityShowcase({ community }) {
                       >
                         <ChevronRight className="w-5 h-5" />
                       </button>
+                    </div>
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                      {heroImages.map((_, i) => (
+                        <motion.span
+                          key={i}
+                          initial={false}
+                          animate={{ scale: i === heroIdx ? 1.2 : 1, opacity: i === heroIdx ? 1 : 0.5 }}
+                          className="w-2 h-2 rounded-full bg-white shadow"
+                        />
+                      ))}
                     </div>
                   </motion.div>
                 )}
@@ -232,9 +259,11 @@ export default function CommunityShowcase({ community }) {
                     <h3 className="text-2xl font-bold text-gray-900 mt-1">
                       {activeProperty.title}
                     </h3>
-                    <div className="mt-2 text-sm text-gray-600">
-                      {bhkLabel} • curated advisory-led listing in {community.name}
-                    </div>
+                    {activeProperty.description && (
+                      <div className="mt-3 text-sm text-gray-600">
+                        {activeProperty.description}
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-3 gap-4 mt-6 text-center">
                       <div className="rounded-2xl bg-gray-50 border border-gray-100 py-3">
@@ -251,13 +280,11 @@ export default function CommunityShowcase({ community }) {
                       </div>
                     </div>
 
+                    
                     <div className="mt-6">
                       <div className="text-sm text-gray-500">Price</div>
                       <div className="mt-1 flex items-start justify-between gap-4">
                         <div className="text-3xl font-bold text-gray-900 leading-tight">{activeProperty.price}</div>
-                        <div className="hidden sm:block text-sm text-gray-600 max-w-44 text-right">
-                          Premium {bhkLabel} with {(activeProperty.sqft || "2,800")} sqft in {community.name}.
-                        </div>
                       </div>
                     </div>
 
@@ -406,6 +433,59 @@ export default function CommunityShowcase({ community }) {
         )}
       </div>
       <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50"
+          >
+            <div
+              className="absolute inset-0 bg-black/70"
+              onClick={() => setLightboxOpen(false)}
+            />
+            <div className="absolute inset-0 flex items-center justify-center p-6" onClick={() => setLightboxOpen(false)}>
+              <div className="relative w-[min(1100px,95vw)] h-[min(70vh,75vw)] rounded-2xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                <Image
+                  src={heroImages[heroIdx]}
+                  alt={activeProperty?.title || community.name}
+                  fill
+                  className="object-contain bg-black"
+                  priority
+                />
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
+                  {heroImages.map((_, i) => (
+                    <motion.button
+                      key={i}
+                      onClick={() => setHeroIdx(i)}
+                      whileHover={{ scale: 1.15 }}
+                      className={["w-2.5 h-2.5 rounded-full", i === heroIdx ? "bg-white" : "bg-white/50"].join(" ")}
+                    />
+                  ))}
+                </div>
+                <div className="absolute inset-y-0 left-0 flex items-center">
+                  <button
+                    onClick={prevHero}
+                    className="m-3 p-3 rounded-full bg-white/80 text-gray-900 border border-gray-300 shadow-sm hover:bg-white"
+                    aria-label="Previous"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="absolute inset-y-0 right-0 flex items-center">
+                  <button
+                    onClick={nextHero}
+                    className="m-3 p-3 rounded-full bg-white/80 text-gray-900 border border-gray-300 shadow-sm hover:bg-white"
+                    aria-label="Next"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
         {tourPopupOpen && (
           <motion.div
             initial={{ opacity: 0 }}

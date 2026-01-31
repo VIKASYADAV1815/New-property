@@ -30,11 +30,11 @@ export const blogs = [
   },
   {
     id: "b-3",
-    slug: "noida-expansion-corridor-where-to-buy-2026",
-    title: "Noida Expansion Corridor: Where to Buy in 2026",
+    slug: "dehradun-expansion-corridor-where-to-buy-2026",
+    title: "Dehradun Expansion Corridor: Where to Buy in 2026",
     date: "January 14, 2026",
     tag: "Area Guide",
-    image: "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=1167&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1600&auto=format&fit=crop",
     rating: "★ 4.5/5",
     gallery: [
       "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop",
@@ -44,11 +44,11 @@ export const blogs = [
   },
   {
     id: "b-4",
-    slug: "top-10-budget-flats-noida-under-50-lakhs",
-    title: "Top 10 Budget Flats in Noida Under 50 Lakhs",
+    slug: "top-10-budget-flats-dehradun-under-50-lakhs",
+    title: "Top 10 Budget Flats in Dehradun Under 50 Lakhs",
     date: "January 15, 2026",
     tag: "Budget Homes",
-    image: "https://plus.unsplash.com/premium_photo-1680281937048-735543c5c0f7?q=80&w=722&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1600&auto=format&fit=crop",
     rating: "★ 4.5/5",
     gallery: [
       "https://images.unsplash.com/photo-1505692794403-34f04b1a9a27?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -71,15 +71,15 @@ export const blogs = [
   },
   {
     id: "b-6",
-    slug: "navi-mumbai-vs-mumbai-investment",
-    title: "Navi Mumbai vs Mumbai: Where Should You Invest?",
+    slug: "dehradun-vs-delhi-investment",
+    title: "Dehradun vs Delhi: Where Should You Invest?",
     date: "January 5, 2026",
     tag: "Investment",
-    image: "https://images.unsplash.com/photo-1504610926078-a1611febcad3?q=80&w=1600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1600&auto=format&fit=crop",
     rating: "★ 4.4/5",
     gallery: [
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1508385082359-f38ae991e8f2?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1515263487990-61b07816b324?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=1600&auto=format&fit=crop",
     ],
   },
   {
@@ -126,8 +126,8 @@ export const blogs = [
   },
   {
     id: "b-10",
-    slug: "gurugram-new-launches-jan-2026",
-    title: "Gurugram New Launches: January 2026 Highlights",
+    slug: "gurgaon-new-launches-jan-2026",
+    title: "Gurgaon New Launches: January 2026 Highlights",
     date: "January 20, 2026",
     tag: "Trending News",
     image: "https://images.unsplash.com/photo-1483058712412-3188f788b0f7?q=80&w=1600&auto=format&fit=crop",

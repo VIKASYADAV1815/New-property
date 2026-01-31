@@ -10,11 +10,11 @@ export const offplan = [
   },
   {
     id: "op-2",
-    title: "Godrej Azure Towers",
-    location: "Okhla, Delhi",
-    price: "₹ 2.4 Cr",
+    title: "Pacific Valley Residences",
+    location: "Dehradun",
+    price: "₹ 2.2 Cr",
     image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1600&auto=format&fit=crop",
     tag: "Home",
   },
   {
@@ -27,4 +27,3 @@ export const offplan = [
     tag: "Villa",
   },
 ];
-

@@ -19,6 +19,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'plus.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.staticmb.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'housing-images.n7net.in',
+      },
     ],
   },
 };

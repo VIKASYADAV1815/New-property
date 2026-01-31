@@ -122,9 +122,9 @@ export default function CardTeam() {
         {/* --- FOOTER STRIP --- */}
         <div className="mt-12 flex justify-between items-center border-t border-gray-100 pt-6 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 reveal">
             <div className="flex gap-6">
-                <span>Gurugram</span>
+                <span>Dehradun</span>
                 <span>Delhi</span>
-                <span>Noida</span>
+                <span>Gurgaon</span>
             </div>
             <div className="flex items-center gap-2">
                 <div className="w-1 h-1 rounded-full bg-sky-600" />

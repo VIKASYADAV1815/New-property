@@ -34,7 +34,7 @@ export default function CareerLayout() {
           <div className="space-y-4">
             {[
               { role: "Senior Sales Consultant", dept: "Sales", type: "Full-time", loc: "Gurugram" },
-              { role: "Marketing Manager", dept: "Marketing", type: "Full-time", loc: "Noida" },
+              { role: "Marketing Manager", dept: "Marketing", type: "Full-time", loc: "Dehradun" },
               { role: "Customer Relations Executive", dept: "Support", type: "Full-time", loc: "Delhi" },
               { role: "Real Estate Analyst", dept: "Research", type: "Hybrid", loc: "Gurugram" },
             ].map((job, idx) => (

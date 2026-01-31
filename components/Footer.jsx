@@ -91,7 +91,7 @@ export default function Footer() {
                 </div>
                 <div className="flex items-start gap-4 text-base text-gray-600">
                   <MapPin className="w-4.5 h-4.5 text-gray-400 shrink-0 mt-0.5" />
-                  Sector 53, Gurugram
+                  Sector 53, Gurgaon
                 </div>
               </div>
             </div>

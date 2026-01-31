@@ -15,8 +15,7 @@ export default function CatalogLayout({ items }) {
     const initialLocations = locParam ? new Set([locParam]) : new Set(["Delhi"]);
     return {
       locations: initialLocations,
-      priceBand: "custom",
-      customPrice: 1000000000,
+      priceRange: { min: 5000000, max: 200000000 },
       area: { min: "", max: "" },
     };
   });
@@ -33,6 +32,11 @@ export default function CatalogLayout({ items }) {
   };
 
   const parseRupees = (str) => {
+    const s = String(str || "").toLowerCase();
+    const numMatch = s.match(/[\d\.]+/);
+    const num = Number(numMatch ? numMatch[0] : 0);
+    if (s.includes("lakh")) return Math.round(num * 100000);
+    if (s.includes("cr")) return Math.round(num * 10000000);
     const digits = String(str || "").replace(/[^\d]/g, "");
     return Number(digits || 0);
   };
@@ -46,15 +50,12 @@ export default function CatalogLayout({ items }) {
         const hasAny = Array.from(filters.locations).some((k) => locStr.includes(k.toLowerCase()));
         if (!hasAny) return false;
       }
-      // Price band
-      if (filters.priceBand !== "custom") {
+      // Price range: 50 Lakhs to 20 Cr
+      if (filters.priceRange) {
         const rupees = parseRupees(p.price);
-        if (filters.priceBand === "under" && !(rupees < 100000)) return false;
-        if (filters.priceBand === "mid" && !(rupees >= 100000 && rupees <= 1500000)) return false;
-        if (filters.priceBand === "over" && !(rupees > 1500000)) return false;
-      } else {
-        const rupees = parseRupees(p.price);
-        if (!(rupees >= 0 && rupees <= filters.customPrice)) return false;
+        const min = Number(filters.priceRange.min || 0);
+        const max = Number(filters.priceRange.max || Number.MAX_SAFE_INTEGER);
+        if (!(rupees >= min && rupees <= max)) return false;
       }
       // Area range (sqft)
       const sqft = parseSqft(p.sqft);
@@ -74,8 +75,7 @@ export default function CatalogLayout({ items }) {
             onClear={() =>
               setFilters({
                 locations: new Set(),
-                priceBand: "custom",
-                customPrice: 1000000,
+                priceRange: { min: 5000000, max: 200000000 },
                 area: { min: "", max: "" },
               })
             }
@@ -101,8 +101,7 @@ export default function CatalogLayout({ items }) {
               onClear={() =>
                 setFilters({
                   locations: new Set(),
-                  priceBand: "custom",
-                  customPrice: 1000000,
+                  priceRange: { min: 5000000, max: 200000000 },
                   area: { min: "", max: "" },
                 })
               }

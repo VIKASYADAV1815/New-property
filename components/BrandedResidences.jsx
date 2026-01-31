@@ -14,11 +14,11 @@ const residences = [
     developer: "M3M"
   },
   {
-    title: "Oberoi Sky City",
-    location: "Borivali East, Mumbai",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600&auto=format&fit=crop",
-    price: "₹ 3.8 Cr",
-    developer: "Oberoi Realty"
+    title: "Pacific Golf Estate",
+    location: "Dehradun",
+    image: "https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1600&auto=format&fit=crop",
+    price: "₹ 2.8 Cr",
+    developer: "Pacific Group"
   }
 ];
 
