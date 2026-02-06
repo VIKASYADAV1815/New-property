@@ -52,8 +52,8 @@ export default function AdminBlogs() {
       {open && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/30" onClick={() => setOpen(false)} />
-          <div className="absolute inset-0 flex items-center justify-center p-6" onClick={() => setOpen(false)}>
-            <div className="w-[min(700px,95vw)] rounded-2xl border border-gray-200 bg-white p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute inset-0 overflow-y-auto p-4 sm:p-6" onClick={() => setOpen(false)}>
+            <div className="mx-auto my-6 w-full max-w-[700px] rounded-2xl border border-gray-200 bg-white p-4 sm:p-6" onClick={(e) => e.stopPropagation()}>
               <div className="text-sm font-bold text-gray-900">{editing ? "Edit blog" : "New blog"}</div>
               <EntityForm
                 initial={editing || {}}

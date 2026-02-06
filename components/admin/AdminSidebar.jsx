@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/pages", label: "Pages", icon: File },
   { href: "/admin/blogs", label: "Blogs", icon: Newspaper },
   { href: "/admin/communities", label: "Communities", icon: Building2 },
   { href: "/admin/properties", label: "Properties", icon: Home },

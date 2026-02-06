@@ -1,14 +1,13 @@
 import { properties } from "@/data/properties";
 import { communities } from "@/data/communities";
 import { blogs } from "@/data/blogs";
-import { Building2, Home, Newspaper, FilePlus2, BarChart3, Sparkles } from "lucide-react";
+import { Building2, Home, Newspaper, BarChart3, Sparkles } from "lucide-react";
 
 export default function AdminDashboard() {
   const stats = [
     { label: "Properties", value: properties.length, icon: Home, tone: "from-sky-50 to-white" },
     { label: "Communities", value: communities.length, icon: Building2, tone: "from-violet-50 to-white" },
     { label: "Blogs", value: blogs?.length || 0, icon: Newspaper, tone: "from-rose-50 to-white" },
-    { label: "Pages", value: 4, icon: FilePlus2, tone: "from-amber-50 to-white" },
   ];
   const max = Math.max(...stats.map((s) => s.value), 1);
   const total = stats.reduce((a, s) => a + s.value, 0);
