@@ -46,7 +46,7 @@ export default function ContactLayout() {
 
           {/* Image + Contact Info (Right) */}
           <div className="space-y-6">
-            <div className="relative h-72 lg:h-[420px] rounded-3xl overflow-hidden border border-gray-200">
+            <div className="relative h-72 lg:h-105 rounded-3xl overflow-hidden border border-gray-200">
               <Image
                 src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1600&auto=format&fit=crop"
                 alt="Luxury interior"
@@ -54,7 +54,7 @@ export default function ContactLayout() {
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/55 via-black/20 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 text-white">
                 <div className="text-sm text-white/80">Advisory-led • Delhi NCR</div>
                 <div className="text-xl font-bold mt-1">Let’s shortlist the right-fit options.</div>

@@ -27,6 +27,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'housing-images.n7net.in',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ],
   },
 };

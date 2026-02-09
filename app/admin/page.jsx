@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   const total = stats.reduce((a, s) => a + s.value, 0);
   return (
     <div className="space-y-8 min-h-full">
-      <div className="rounded-3xl border border-gray-200 p-6 bg-gradient-to-br from-gray-50 to-white">
+      <div className="rounded-3xl border border-gray-200 p-6 bg-linear-to-br from-gray-50 to-white">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-xs font-black uppercase tracking-[0.15em] text-gray-500">Admin</div>
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
             {stats.map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={i} className={`rounded-2xl border border-gray-200 p-4 bg-gradient-to-br ${s.tone}`}>
+                <div key={i} className={`rounded-2xl border border-gray-200 p-4 bg-linear-to-br ${s.tone}`}>
                   <div className="flex items-center gap-2">
                     <Icon className="w-4 h-4 text-sky-600" />
                     <div className="text-xs text-gray-500">{s.label}</div>

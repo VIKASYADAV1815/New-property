@@ -108,7 +108,7 @@ export default function ImageUploader({ value, onChange }) {
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/30" onClick={() => setModalOpen(false)} />
           <div className="absolute inset-0 overflow-y-auto p-4 sm:p-6" onClick={() => setModalOpen(false)}>
-            <div className="mx-auto my-6 w-full max-w-[800px] rounded-2xl border border-gray-200 bg-white p-4 sm:p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="mx-auto my-6 w-full max-w-200 rounded-2xl border border-gray-200 bg-white p-4 sm:p-6" onClick={(e) => e.stopPropagation()}>
               <div className="text-sm font-bold text-gray-900">Crop image</div>
               <div className="mt-3">
                 <div

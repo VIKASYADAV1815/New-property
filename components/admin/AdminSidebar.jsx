@@ -7,10 +7,10 @@ import { gsap } from "gsap";
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/blogs", label: "Blogs", icon: Newspaper },
-  { href: "/admin/communities", label: "Communities", icon: Building2 },
+  // { href: "/admin/communities", label: "Communities", icon: Building2 },
   { href: "/admin/properties", label: "Properties", icon: Home },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/contact", label: "Contact Form Details", icon: Users },
+  // { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default function AdminSidebar() {
