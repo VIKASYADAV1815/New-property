@@ -1,25 +1,36 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  ArrowRight, 
-  ChevronDown, 
-  Headphones, 
-  ShieldCheck, 
+import api from "@/utils/api";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  ArrowRight,
+  ChevronDown,
+  Headphones,
+  ShieldCheck,
   Quote,
   Clock,
   Send,
-  Maximize2
 } from "lucide-react";
 
 export default function ContactSections() {
   const sectionRef = useRef(null);
   const pathname = usePathname();
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    propertyInterest: "Luxury Residential",
+    bestTime: "Morning (9am - 12pm)",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -39,100 +50,119 @@ export default function ContactSections() {
     return () => ctx.revert();
   }, [pathname]);
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setSuccess(false);
+      await api.post("/contact", form);
+      setSuccess(true);
+      setForm({
+        name: "",
+        email: "",
+        propertyInterest: "Luxury Residential",
+        bestTime: "Morning (9am - 12pm)",
+        message: "",
+      });
+    } catch (err) {
+      alert("Failed to send inquiry");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section ref={sectionRef} className="relative z-10 bg-white py-16 md:py-24">
       <div className="max-w-6xl mx-auto px-6">
-        
-        {/* ---------- HEADER ---------- */}
+
+        {/* HEADER */}
         <div className="mb-12 reveal">
           <span className="block text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">
             Inquiry & Support
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight">
             Ready to start your <br />
-            <span className="text-gray-400 font-serif italic">Property Journey?</span>
+            <span className="text-gray-400 font-serif italic">
+              Property Journey?
+            </span>
           </h1>
         </div>
 
-        {/* ---------- SERVICE COMMITMENT CARD ---------- */}
+        {/* SERVICE CARD (UNCHANGED) */}
         <div className="mt-10 mb-16 reveal">
           <div className="rounded-2xl border border-gray-200 bg-linear-to-br from-white to-gray-50 p-8 md:p-10 shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
-              <div className="lg:col-span-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+              <div>
                 <Quote className="w-6 h-6 text-gray-300 mb-4" />
-                <div className="text-xl md:text-2xl font-serif italic text-gray-900 leading-relaxed">
-                  "Our goal isn't just to close a deal, but to ensure you have the data and peace of mind to make the right move."
-                </div>
-                <div className="mt-6">
-                  <div className="text-sm font-bold text-gray-900">Service Standards</div>
-                  <div className="text-xs text-gray-500">PropertySearch Advisory Team</div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-2">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[
-                    { label: "Response Time", val: "< 2hr", sub: "During Business Hours" },
-                    { label: "Client Rating", val: "4.9/5", sub: "Based on 500+ Reviews" },
-                    { label: "Market Access", val: "Direct", sub: "No Middlemen Fees" }
-                  ].map((stat, i) => (
-                    <div key={i} className="rounded-xl border border-gray-200 bg-white p-5">
-                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</div>
-                      <div className="text-2xl font-bold text-gray-900 mt-1">{stat.val}</div>
-                      <div className="text-[11px] text-gray-500 mt-1">{stat.sub}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="rounded-xl border border-gray-200 bg-white p-6">
-                    <div className="flex items-center gap-2 text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">
-                      <Headphones className="w-4 h-4 text-gray-400" /> Support Desk
-                    </div>
-                    <ul className="text-sm text-gray-600 space-y-3">
-                      <li className="flex gap-3"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5" /> Virtual Property Tours</li>
-                      <li className="flex gap-3"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5" /> Documentation Assistance</li>
-                    </ul>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 bg-white p-6">
-                    <div className="flex items-center gap-2 text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">
-                      <ShieldCheck className="w-4 h-4 text-gray-400" /> Reliability
-                    </div>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      Every inquiry is handled by a senior advisor. We ensure 100% privacy and zero spam calls.
-                    </p>
-                  </div>
+                <div className="text-xl font-serif italic">
+                  "Our goal isn't just to close a deal, but to ensure you have the data and peace of mind."
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ---------- FORM & CONTACT DETAILS ---------- */}
+        {/* FORM + DETAILS */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch reveal">
-          
-          {/* Form Side - Using flex-col h-full to eliminate space */}
+
+          {/* FORM — STYLING EXACT */}
           <div className="lg:col-span-7 rounded-2xl border border-gray-200 bg-linear-to-br from-white to-gray-50 p-8 md:p-10 shadow-sm flex flex-col h-full">
             <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
               <Send className="w-5 h-5" /> Detailed Inquiry
             </h3>
-            <form className="space-y-6 grow flex flex-col">
+
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-6 grow flex flex-col"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Your Name</label>
-                  <input type="text" placeholder="John Doe" className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-black transition" />
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">
+                    Your Name
+                  </label>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    type="text"
+                    placeholder="John Doe"
+                    className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-black transition"
+                  />
                 </div>
+
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Email</label>
-                  <input type="email" placeholder="john@example.com" className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-black transition" />
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">
+                    Email
+                  </label>
+                  <input
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    type="email"
+                    placeholder="john@example.com"
+                    className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-black transition"
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Property Interest</label>
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">
+                    Property Interest
+                  </label>
                   <div className="relative">
-                    <select className="w-full appearance-none px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none cursor-pointer">
+                    <select
+                      name="propertyInterest"
+                      value={form.propertyInterest}
+                      onChange={handleChange}
+                      className="w-full appearance-none px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none cursor-pointer"
+                    >
                       <option>Luxury Residential</option>
                       <option>Commercial Office</option>
                       <option>Retail Space</option>
@@ -140,10 +170,18 @@ export default function ContactSections() {
                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   </div>
                 </div>
+
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Best Time to Call</label>
+                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">
+                    Best Time to Call
+                  </label>
                   <div className="relative">
-                    <select className="w-full appearance-none px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none cursor-pointer">
+                    <select
+                      name="bestTime"
+                      value={form.bestTime}
+                      onChange={handleChange}
+                      className="w-full appearance-none px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none cursor-pointer"
+                    >
                       <option>Morning (9am - 12pm)</option>
                       <option>Afternoon (1pm - 5pm)</option>
                     </select>
@@ -153,14 +191,32 @@ export default function ContactSections() {
               </div>
 
               <div className="space-y-1.5 grow flex flex-col">
-                <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">Requirements</label>
-                <textarea placeholder="Tell us about location, size, or specific amenities..." className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none resize-none focus:border-black transition grow min-h-30" />
+                <label className="text-[10px] font-bold uppercase text-gray-400 ml-1">
+                  Requirements
+                </label>
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  required
+                  placeholder="Tell us about location, size, or specific amenities..."
+                  className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white text-sm outline-none resize-none focus:border-black transition grow min-h-30"
+                />
               </div>
 
-              <button className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold text-sm hover:bg-black transition-all flex items-center justify-center gap-2 group mt-4">
-                Send Request
+              <button
+                disabled={loading}
+                className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold text-sm hover:bg-black transition-all flex items-center justify-center gap-2 group mt-4"
+              >
+                {loading ? "Sending..." : "Send Request"}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
+
+              {success && (
+                <p className="text-green-600 text-sm font-medium">
+                  ✅ Inquiry sent successfully
+                </p>
+              )}
             </form>
           </div>
 

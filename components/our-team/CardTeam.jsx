@@ -60,7 +60,7 @@ export default function CardTeam() {
             <div key={m.id} className="group relative">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-sm">
                 <Image src={m.image} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={m.name} />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-end">
+                <div className="absolute inset-0 bg-linear-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-end">
                   <p className="text-sky-400 text-[8px] font-bold uppercase tracking-widest">{m.role}</p>
                 </div>
               </div>

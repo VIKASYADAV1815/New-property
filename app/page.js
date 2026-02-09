@@ -35,7 +35,7 @@ export default function Home() {
         <WhyWorkWithUs />
         <FounderPreview />
         <FeatureSection />
-        <ConsultationForm />
+        {/* <ConsultationForm /> */}
         <BlogSection />
       </div>
 
