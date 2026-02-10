@@ -9,6 +9,9 @@ export default function AdminBlogs() {
   const [editing, setEditing] = useState(null);
   const [viewing, setViewing] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
   const objectUrlsRef = useRef([]);
 
   const [formData, setFormData] = useState({
@@ -75,6 +78,12 @@ export default function AdminBlogs() {
       } else if (data?.data) {
         blogList = data.data;
       }
+
+      // Transform _id to id for consistency
+      blogList = blogList.map(blog => ({
+        ...blog,
+        id: blog._id || blog.id
+      }));
 
       setItems(blogList || []);
     } catch (err) {
@@ -232,15 +241,23 @@ export default function AdminBlogs() {
     }
   };
 
-  const handleDelete = async (ids) => {
-    if (!window.confirm(`Delete ${ids.length} blogs?`)) return;
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setConfirmOpen(true);
+    setDeleteError(null);
+  };
+
+  const confirmDeleteAction = async () => {
     try {
       setLoading(true);
-      await Promise.all(ids.map((id) => api.delete(`/blogs/${id}`)));
+      setDeleteError(null);
+      await api.delete(`/blogs/${deleteId}`);
       load();
+      setConfirmOpen(false);
+      setDeleteId(null);
     } catch (err) {
       console.error(err);
-      alert("Delete failed");
+      setDeleteError(err.response?.data?.message || err.message || "Delete failed");
     } finally {
       setLoading(false);
     }
@@ -431,6 +448,42 @@ export default function AdminBlogs() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {confirmOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Delete Blog?</h2>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this blog? This action cannot be undone.</p>
+            
+            {deleteError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+                {deleteError}
+              </div>
+            )}
+            
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setConfirmOpen(false);
+                  setDeleteId(null);
+                  setDeleteError(null);
+                }}
+                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteAction}
+                disabled={loading}
+                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium disabled:opacity-60"
+              >
+                {loading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}

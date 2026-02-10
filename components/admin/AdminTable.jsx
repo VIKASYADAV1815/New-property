@@ -6,7 +6,6 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
   const [q, setQ] = useState("");
   const [sortKey, setSortKey] = useState(columns?.[0]?.key || "id");
   const [sortDir, setSortDir] = useState("asc");
-  const [selected, setSelected] = useState([]);
   const filtered = useMemo(() => {
     const base = Array.isArray(rows) ? rows : [];
     const f = base.filter((r) => {
@@ -24,9 +23,6 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
     });
     return s;
   }, [rows, q, sortKey, sortDir]);
-  const toggleSelect = (id) => {
-    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
-  };
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(filtered, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -35,11 +31,6 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
     a.download = "export.json";
     a.click();
     URL.revokeObjectURL(url);
-  };
-  const bulkDelete = () => {
-    if (!selected.length) return;
-    onDelete?.(selected);
-    setSelected([]);
   };
   return (
     <div className="space-y-3">
@@ -62,9 +53,6 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
         <table className="min-w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
-              <th className="p-3 text-left">
-                <input type="checkbox" checked={selected.length === filtered.length && filtered.length > 0} onChange={(e) => setSelected(e.target.checked ? filtered.map((r) => r.id) : [])} />
-              </th>
               {columns.map((c, idx) => (
                 <th key={`col-${c.key}-${idx}`} className="p-3 text-left">
                   <button
@@ -84,9 +72,6 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
           <tbody>
             {filtered.map((r) => (
               <tr key={String(r.id)} className="border-t border-gray-100">
-                <td className="p-3">
-                  <input type="checkbox" checked={selected.includes(r.id)} onChange={() => toggleSelect(r.id)} />
-                </td>
                 {columns.map((c, idx) => (
                   <td key={`${r.id}-${c.key}-${idx}`} className="p-3">
                     {(() => {
@@ -108,7 +93,7 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
                       <Edit2 className="w-4 h-4" />
                       <span>Edit</span>
                     </button>
-                    <button onClick={() => onDelete?.([r.id])} className="px-3 py-2 rounded-full bg-red-600 text-white text-sm hover:bg-red-700 inline-flex items-center gap-2">
+                    <button onClick={() => onDelete?.(r.id)} className="px-3 py-2 rounded-full bg-red-600 text-white text-sm hover:bg-red-700 inline-flex items-center gap-2">
                       <Trash2 className="w-4 h-4" />
                       <span>Delete</span>
                     </button>
@@ -118,7 +103,7 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={columns.length + 2} className="p-6 text-center text-gray-500">No items</td>
+                <td colSpan={columns.length + 1} className="p-6 text-center text-gray-500">No items</td>
               </tr>
             )}
           </tbody>
