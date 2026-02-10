@@ -2,11 +2,12 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PropertyCard from "./PropertyCard";
-import { properties } from "@/data/properties";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import api from "@/utils/api";
 
 export default function PropertyGrid() {
   const [isPaused, setIsPaused] = useState(false);
+  const [properties, setProperties] = useState([]);
   const scrollRef = useRef(null);
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -14,6 +15,18 @@ export default function PropertyGrid() {
     offset: ["start end", "end start"]
   });
   const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const { data } = await api.get("/properties");
+        setProperties(Array.isArray(data) ? data : data?.items || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchProperties();
+  }, []);
 
   // Triple the properties to create seamless loop illusion
   const loopedProperties = [...properties, ...properties, ...properties];
@@ -47,7 +60,7 @@ export default function PropertyGrid() {
         const { scrollWidth } = scrollRef.current;
         scrollRef.current.scrollTo({ left: scrollWidth / 3, behavior: "instant" });
     }
-  }, []);
+  }, [properties]);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -96,7 +109,7 @@ export default function PropertyGrid() {
           >
             {loopedProperties.map((property, index) => (
               <div 
-                key={`${property.id}-${index}`} 
+                key={`${property._id}-${index}`} 
                 className="snap-center shrink-0"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
