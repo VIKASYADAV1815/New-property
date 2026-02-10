@@ -62,7 +62,6 @@ export default function AdminBlogs() {
     try {
       setLoading(true);
       const { data } = await api.get("/blogs");
-      console.log("blogs loaded", data);
 
       let blogList = [];
 

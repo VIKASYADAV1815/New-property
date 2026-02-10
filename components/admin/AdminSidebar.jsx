@@ -10,7 +10,7 @@ const links = [
   // { href: "/admin/communities", label: "Communities", icon: Building2 },
   { href: "/admin/properties", label: "Properties", icon: Home },
   { href: "/admin/contact", label: "Contact Form Details", icon: Users },
-  // { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/tour-bookings", label: "Tour Bookings and Enquiries", icon: Settings },
 ];
 
 export default function AdminSidebar() {

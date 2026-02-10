@@ -1,14 +1,40 @@
-import { properties } from "@/data/properties";
-import { communities } from "@/data/communities";
-import { blogs } from "@/data/blogs";
+"use client";
+
+import { useEffect, useState } from "react";
+import api from "@/utils/api";
 import { Building2, Home, Newspaper, BarChart3, Sparkles } from "lucide-react";
 
 export default function AdminDashboard() {
-  const stats = [
-    { label: "Properties", value: properties.length, icon: Home, tone: "from-sky-50 to-white" },
-    { label: "Communities", value: communities.length, icon: Building2, tone: "from-violet-50 to-white" },
-    { label: "Blogs", value: blogs?.length || 0, icon: Newspaper, tone: "from-rose-50 to-white" },
-  ];
+  const [stats, setStats] = useState([
+    { label: "Properties", value: 0, icon: Home, tone: "from-sky-50 to-white" },
+    { label: "Blogs", value: 0, icon: Newspaper, tone: "from-rose-50 to-white" },
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [propertiesRes, blogsRes] = await Promise.all([
+          api.get("/properties"),
+          api.get("/blogs"),
+        ]);
+
+        const propertiesCount = propertiesRes.data?.items?.length || 0;
+        const blogsCount = blogsRes.data?.blogs?.length || 0;
+
+        setStats([
+          { label: "Properties", value: propertiesCount, icon: Home, tone: "from-sky-50 to-white" },
+          { label: "Blogs", value: blogsCount, icon: Newspaper, tone: "from-rose-50 to-white" },
+        ]);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
   const max = Math.max(...stats.map((s) => s.value), 1);
   const total = stats.reduce((a, s) => a + s.value, 0);
   return (
@@ -30,7 +56,7 @@ export default function AdminDashboard() {
         <h1 className="text-xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <BarChart3 className="w-4 h-4" />
-          <span>Overview</span>
+          <span>Overview • {loading ? "Loading..." : "Live"}</span>
         </div>
       </div>
       <div className="rounded-3xl border border-gray-200 bg-white p-4 md:p-6">
