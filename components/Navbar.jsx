@@ -6,8 +6,7 @@ import Image from "next/image";
 import { cn } from "@/utils/cn";
 import { Search, Menu, ChevronDown, X, XCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { communities } from "@/data/communities";
-import { properties } from "@/data/properties";
+import api from "@/utils/api";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -17,12 +16,39 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLgUp, setIsLgUp] = useState(false);
+  const [properties, setProperties] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
+
+  // Static cities array - customize slugs here
+  const communities = [
+    { name: "Gurgaon", slug: "gurgaon" },
+    { name: "Delhi", slug: "Delhi" },
+    { name: "Dehradun", slug: "dehradun" },
+   
+  ];
+
   const communityTimer = useRef(null);
   const exploreTimer = useRef(null);
   const searchInputRef = useRef(null);
   const router = useRouter();
   const { scrollY } = useScroll();
   const pathname = usePathname();
+  
+  // Fetch only properties from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoadingData(true);
+        const propertiesRes = await api.get("/properties");
+        setProperties(propertiesRes.data?.items || propertiesRes.data || []);
+      } catch (err) {
+        console.error("Failed to fetch navbar properties:", err);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+    fetchData();
+  }, []);
   
   // Filter properties and communities based on search query
   const filteredProperties = searchQuery

@@ -1,31 +1,27 @@
 import PageHero from "@/components/common/PageHero";
 import PageIntroBar from "@/components/common/PageIntroBar";
-import CatalogLayout from "@/components/common/CatalogLayout";
 import CommunityShowcase from "@/components/community/CommunityShowcase";
-import { communities } from "@/data/communities";
-import { properties } from "@/data/properties";
+import api from "@/utils/api";
 
-export default function CommunityPage({ params }) {
-  const community = communities.find((c) => c.slug === params.slug);
-  const rawSlug = params?.slug || "community";
-  const fallbackCommunity = community || {
-    slug: rawSlug,
-    name: rawSlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-    projects: 0,
-    image:
-      "https://images.unsplash.com/photo-1515263487990-61b07816b324?q=80&w=1600&auto=format&fit=crop",
+export default async function CommunityPage({ params }) {
+  const { slug } = await params;
+  if (!slug) {
+    return <div>Community not found</div>;
+  }
+  const cityName = slug.charAt(0).toUpperCase() + slug.slice(1);
+  let items = [];
+  try {
+    const { data } = await api.get(`/properties/city/${cityName}`);
+    items = data?.items || [];
+  } catch (err) {
+    console.error(err);
+  }
+  const fallbackCommunity = {
+    slug,
+    name: cityName,
+    projects: items.length,
+    image: "https://images.unsplash.com/photo-1515263487990-61b07816b324?q=80&w=1600&auto=format&fit=crop",
   };
-  const key = (fallbackCommunity.name || "").toLowerCase();
-  const items = properties.filter((p) =>
-    `${p.location} ${p.title}`.toLowerCase().includes(key)
-  ).length
-    ? properties.filter((p) =>
-        `${p.location} ${p.title}`.toLowerCase().includes(key)
-      )
-    : properties.map((p, idx) => ({
-        ...p,
-        id: `${fallbackCommunity.slug}-${p.id}-${idx}`,
-      }));
   return (
     <>
       <PageHero
@@ -34,11 +30,7 @@ export default function CommunityPage({ params }) {
         image={fallbackCommunity.image}
       />
       <PageIntroBar count={items.length} caption="Carefully evaluated properties" />
-      <CommunityShowcase community={fallbackCommunity} />
+      <CommunityShowcase community={fallbackCommunity} items={items} />
     </>
   );
-}
-
-export async function generateStaticParams() {
-  return communities.map((c) => ({ slug: c.slug }));
 }

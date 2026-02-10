@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
 
 export default function CitySpotlight() {
@@ -12,19 +13,11 @@ export default function CitySpotlight() {
             <span className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3 block">Our Focus Areas</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-sans tracking-tight">Delhi, Gurgaon & Dehradun Market Expertise</h2>
           </div>
-         <button
-  className="inline-flex items-center gap-2 rounded-full border border-gray-300
-             px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-gray-800
-             transition-all duration-300
-             hover:border-sky-500 hover:bg-sky-500 hover:text-white"
->
-  Discuss Your Requirement
-  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-</button>
 
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Link href="/community/delhi" className="lg:col-span-2">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -46,7 +39,9 @@ export default function CitySpotlight() {
               <p className="text-sm text-gray-300">Iconic bungalows, embassies, and central Delhi living with premium civic amenities.</p>
             </div>
           </motion.div>
+          </Link>
 
+          <Link href="/community/gurgaon">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -68,18 +63,20 @@ export default function CitySpotlight() {
               <p className="text-sm text-gray-300">Premium high-rises, business districts, and vibrant lifestyle destinations.</p>
             </div>
           </motion.div>
+          </Link>
           
+          <Link href="/community/dehradun" className="lg:col-span-3">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative h-105 rounded-2xl overflow-hidden group shadow-lg"
+            className="lg:col-span-3 relative h-105 rounded-2xl overflow-hidden group shadow-lg"
           >
             <Image
-              src="https://images.unsplash.com/photo-1603261343604-0b907606ade0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0"
+              src="https://i.pinimg.com/736x/26/69/2a/26692a44a6a5dffc8e5dd41f8991c275.jpg"
               alt="Dehradun Foothills"
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
+              className="object-cover group-hover:scale-102 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md text-gray-900 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2">
@@ -90,6 +87,7 @@ export default function CitySpotlight() {
               <p className="text-sm text-gray-300">Green residential pockets with serene mountain views and calm lifestyle.</p>
             </div>
           </motion.div>
+          </Link>
         </div>
       </div>
     </section>

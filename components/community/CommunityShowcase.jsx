@@ -1,23 +1,15 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { properties } from "@/data/properties";
 import { communities } from "@/data/communities";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function CommunityShowcase({ community }) {
+export default function CommunityShowcase({ community, items = [] }) {
   const router = useRouter();
-  const key = community.name.toLowerCase();
-  const allItems = properties.filter((p) =>
-    `${p.location} ${p.title}`.toLowerCase().includes(key)
-  ).length
-    ? properties.filter((p) =>
-        `${p.location} ${p.title}`.toLowerCase().includes(key)
-      )
-    : properties.slice(0, 6);
+  const allItems = items && items.length > 0 ? items : [];
 
   // Filters (functional)
   const [filtersDraft, setFiltersDraft] = useState({
@@ -46,7 +38,7 @@ export default function CommunityShowcase({ community }) {
     return value / 10000000;
   };
 
-  const items = useMemo(() => {
+  const filteredItems = useMemo(() => {
     return allItems.filter((p) => {
       if (filtersApplied.propertyType !== "Any" && p.tag !== filtersApplied.propertyType) return false;
       if (filtersApplied.bedrooms !== "Any" && Number(p.beds || 0) !== Number(filtersApplied.bedrooms)) return false;
@@ -60,7 +52,7 @@ export default function CommunityShowcase({ community }) {
     });
   }, [allItems, filtersApplied]);
 
-  const primary = items[0] || allItems[0] || properties[0];
+  const primary = filteredItems[0] || allItems[0];
   const [activeProperty, setActiveProperty] = useState(() => primary);
   const [isSwitching, setIsSwitching] = useState(false);
   const pendingRef = useRef(null);
@@ -99,7 +91,9 @@ export default function CommunityShowcase({ community }) {
   }, [heroImages.length, lightboxOpen]);
 
   const onSelect = (p) => {
-    if (!p || p.id === activeProperty?.id) return;
+    const pId = p.id || p._id;
+    const activeId = activeProperty?.id || activeProperty?._id;
+    if (!p || pId === activeId) return;
     // Scroll up so user sees the details panel immediately
     if (topRef.current) {
       topRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -401,17 +395,20 @@ export default function CommunityShowcase({ community }) {
       <div id="latest-in-community" className="max-w-350 mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <h4 className="text-2xl font-bold text-gray-900">Latest in {community.name}</h4>
-          <button className="text-sm font-bold text-gray-900">View all</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.map((p) => (
+          {filteredItems.map((p, index) => {
+            const pId = p.id || p._id;
+            const activeId = activeProperty?.id || activeProperty?._id;
+            const isActive = pId === activeId;
+            return (
             <div 
-              key={p.id} 
+              key={pId || `${p.title}-${index}`}
               onClick={() => onSelect(p)}
               className={[
                 "rounded-2xl border bg-white overflow-hidden cursor-pointer transition-all",
                 "hover:shadow-lg hover:border-sky-500",
-                activeProperty?.id === p.id ? "border-sky-500 ring-1 ring-sky-500/30" : "border-gray-200",
+                isActive ? "border-sky-500 ring-1 ring-sky-500/30" : "border-gray-200",
               ].join(" ")}
             >
               <div className="relative h-40">
@@ -423,9 +420,10 @@ export default function CommunityShowcase({ community }) {
                 <div className="mt-2 font-bold text-sky-600">{p.price}</div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
-        {items.length === 0 && (
+        {filteredItems.length === 0 && (
           <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-8 text-center">
             <div className="text-lg font-bold text-gray-900">No listings match your filters</div>
             <div className="text-sm text-gray-600 mt-1">Try resetting filters to see all properties.</div>

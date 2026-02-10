@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import HeroSection from "@/components/HeroSection";
 import PropertyGrid from "@/components/PropertyGrid";
-import BrandedResidences from "@/components/BrandedResidences";
-import FeaturedProjects from "@/components/FeaturedProjects";
+// import BrandedResidences from "@/components/BrandedResidences";
+// import FeaturedProjects from "@/components/FeaturedProjects";
 import CitySpotlight from "@/components/CitySpotlight";
 import ProjectMotion from "@/components/ProjectMotion";
 import BentoGrid from "@/components/BentoGrid";
@@ -28,9 +28,9 @@ export default function Home() {
       <div className="relative z-10 bg-white divide-y divide-gray-200">
         <CitySpotlight />
         <PropertyGrid />
-        <FeaturedProjects />
+        {/* <FeaturedProjects /> */}
         <ProjectMotion />
-        <BrandedResidences />
+        {/* <BrandedResidences /> */}
         <BentoGrid />
         <WhyWorkWithUs />
         <FounderPreview />

@@ -591,7 +591,7 @@ export default function AdminProperties() {
             </p>
 
             <p className="text-4xl font-bold text-green-700 mb-8">
-              ₹ {Number(viewing.price)?.toLocaleString() || viewing.price}
+              ₹ {viewing.price.toLocaleString("en-IN")}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
