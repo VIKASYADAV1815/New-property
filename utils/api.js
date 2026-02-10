@@ -6,18 +6,6 @@ const api = axios.create({
 
 });
 
-// ✅ response interceptor (debug + clean error)
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const message =
-      error?.response?.data?.message ||
-      error?.response?.data ||
-      error.message;
 
-    console.error("API ERROR:", message);
-    return Promise.reject(error);
-  }
-);
 
 export default api;
