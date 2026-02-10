@@ -65,8 +65,8 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
               <th className="p-3 text-left">
                 <input type="checkbox" checked={selected.length === filtered.length && filtered.length > 0} onChange={(e) => setSelected(e.target.checked ? filtered.map((r) => r.id) : [])} />
               </th>
-              {columns.map((c) => (
-                <th key={c.key} className="p-3 text-left">
+              {columns.map((c, idx) => (
+                <th key={`col-${c.key}-${idx}`} className="p-3 text-left">
                   <button
                     onClick={() => {
                       setSortKey(c.key);
@@ -87,8 +87,8 @@ export default function AdminTable({ columns, rows, onCreate, onEdit, onDelete, 
                 <td className="p-3">
                   <input type="checkbox" checked={selected.includes(r.id)} onChange={() => toggleSelect(r.id)} />
                 </td>
-                {columns.map((c) => (
-                  <td key={c.key} className="p-3">
+                {columns.map((c, idx) => (
+                  <td key={`${r.id}-${c.key}-${idx}`} className="p-3">
                     {(() => {
                       const v = r[c.key];
                       const s = (v == null ? "" : String(v)).trim();
