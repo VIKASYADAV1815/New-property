@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import api from "@/utils/api";
 
 export default function CommunityShowcase({ community, items = [] }) {
   const router = useRouter();
@@ -82,6 +83,22 @@ export default function CommunityShowcase({ community, items = [] }) {
   const nextHero = () => setHeroIdx((i) => (i + 1) % heroImages.length);
   const prevHero = () => setHeroIdx((i) => (i - 1 + heroImages.length) % heroImages.length);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  
+  // Tour booking form state
+  const [tourFormData, setTourFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    preferredDate: "",
+    preferredTime: "9:00 AM",
+    numberOfPeople: 1,
+    guestType: "Individual",
+    message: "",
+  });
+  const [tourSubmitting, setTourSubmitting] = useState(false);
+  const [tourError, setTourError] = useState("");
+  const [tourSuccess, setTourSuccess] = useState(false);
+
   useEffect(() => {
     if (lightboxOpen || heroImages.length <= 1) return;
     const t = setInterval(() => {
@@ -89,6 +106,71 @@ export default function CommunityShowcase({ community, items = [] }) {
     }, 3000);
     return () => clearInterval(t);
   }, [heroImages.length, lightboxOpen]);
+
+  const handleTourFormChange = (e) => {
+    const { name, value } = e.target;
+    setTourFormData((prev) => ({ ...prev, [name]: value }));
+    setTourError("");
+  };
+
+  const handleTourSubmit = async (e) => {
+    e.preventDefault();
+    setTourError("");
+    setTourSubmitting(true);
+
+    try {
+      const propertyId = activeProperty?._id || activeProperty?.id;
+      if (!propertyId) {
+        setTourError("Property information missing");
+        return;
+      }
+
+      const payload = {
+        propertyId,
+        name: tourFormData.name.trim(),
+        email: tourFormData.email.trim(),
+        phone: tourFormData.phone.trim(),
+        preferredDate: tourFormData.preferredDate,
+        preferredTime: tourFormData.preferredTime,
+        numberOfPeople: Number(tourFormData.numberOfPeople),
+        guestType: tourFormData.guestType,
+        message: tourFormData.message.trim(),
+      };
+
+      // Validate required fields
+      if (!payload.name || !payload.email || !payload.phone || !payload.preferredDate) {
+        setTourError("Please fill in all required fields");
+        return;
+      }
+
+      const { data } = await api.post("/tour-bookings", payload);
+
+      if (data.success) {
+        setTourSuccess(true);
+        setTourFormData({
+          name: "",
+          email: "",
+          phone: "",
+          preferredDate: "",
+          preferredTime: "9:00 AM",
+          numberOfPeople: 1,
+          guestType: "Individual",
+          message: "",
+        });
+
+        // Close popup after 2 seconds
+        setTimeout(() => {
+          setTourPopupOpen(false);
+          setTourSuccess(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Tour booking error:", error);
+      setTourError(error.response?.data?.message || "Failed to book tour. Please try again.");
+    } finally {
+      setTourSubmitting(false);
+    }
+  };
 
   const onSelect = (p) => {
     const pId = p.id || p._id;
@@ -520,45 +602,128 @@ export default function CommunityShowcase({ community, items = [] }) {
                     <div className="font-bold text-sky-600 mt-1">{activeProperty.price}</div>
                   </div>
                 </div>
-                <form className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {tourSuccess ? (
+                  <div className="rounded-lg bg-green-50 border border-green-200 p-4 text-center">
+                    <div className="text-green-800 font-semibold">✓ Tour booked successfully!</div>
+                    <div className="text-sm text-green-700 mt-1">We'll send you a confirmation email shortly.</div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleTourSubmit} className="space-y-4">
+                    {tourError && (
+                      <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+                        <div className="text-sm text-red-800">{tourError}</div>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Full name *"
+                        value={tourFormData.name}
+                        onChange={handleTourFormChange}
+                        required
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+                      />
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone *"
+                        value={tourFormData.phone}
+                        onChange={handleTourFormChange}
+                        required
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+                      />
+                    </div>
+
                     <input
-                      type="text"
-                      placeholder="Full name"
+                      type="email"
+                      name="email"
+                      placeholder="Email *"
+                      value={tourFormData.email}
+                      onChange={handleTourFormChange}
+                      required
                       className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
                     />
-                    <input
-                      type="tel"
-                      placeholder="Phone"
-                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <input
+                        type="date"
+                        name="preferredDate"
+                        value={tourFormData.preferredDate}
+                        onChange={handleTourFormChange}
+                        required
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+                      />
+                      <select
+                        name="preferredTime"
+                        value={tourFormData.preferredTime}
+                        onChange={handleTourFormChange}
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+                      >
+                        <option value="9:00 AM">9:00 AM</option>
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="11:00 AM">11:00 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="2:00 PM">2:00 PM</option>
+                        <option value="3:00 PM">3:00 PM</option>
+                        <option value="4:00 PM">4:00 PM</option>
+                        <option value="5:00 PM">5:00 PM</option>
+                      </select>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <input
+                        type="number"
+                        name="numberOfPeople"
+                        min="1"
+                        placeholder="Number of guests"
+                        value={tourFormData.numberOfPeople}
+                        onChange={handleTourFormChange}
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+                      />
+                      <select
+                        name="guestType"
+                        value={tourFormData.guestType}
+                        onChange={handleTourFormChange}
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
+                      >
+                        <option value="Individual">Individual</option>
+                        <option value="Family">Family</option>
+                        <option value="Couple">Couple</option>
+                        <option value="Corporate">Corporate</option>
+                      </select>
+                    </div>
+
+                    <textarea
+                      name="message"
+                      rows={3}
+                      placeholder="Additional message (optional)"
+                      value={tourFormData.message}
+                      onChange={handleTourFormChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm resize-none"
                     />
-                  </div>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm"
-                  />
-                  <textarea
-                    rows={4}
-                    placeholder={`Interested in ${bhkLabel} at ${activeProperty.location}. Budget around ${activeProperty.price}.`}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all text-sm resize-none"
-                  />
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setTourPopupOpen(false)}
-                      className="flex-1 px-4 py-3 rounded-full border border-gray-300 text-sm font-bold hover:bg-gray-50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="flex-1 px-4 py-3 rounded-full bg-black text-white text-sm font-bold hover:bg-gray-800 transition-colors"
-                    >
-                      Request Tour
-                    </button>
-                  </div>
-                </form>
+
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setTourPopupOpen(false)}
+                        disabled={tourSubmitting}
+                        className="flex-1 px-4 py-3 rounded-full border border-gray-300 text-sm font-bold hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={tourSubmitting}
+                        className="flex-1 px-4 py-3 rounded-full bg-black text-white text-sm font-bold hover:bg-gray-800 transition-colors disabled:opacity-50"
+                      >
+                        {tourSubmitting ? "Booking..." : "Request Tour"}
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </motion.div>
