@@ -2,6 +2,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -9,6 +11,7 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -29,7 +32,12 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
       <div className="w-[min(600px,95vw)] rounded-3xl border border-gray-200 bg-white p-6">
-        <div className="text-sm font-black uppercase tracking-[0.15em] text-gray-500">Admin</div>
+        <div className="flex justify-center">
+          <div className="relative w-36 h-14">
+            <Image src="/logo.png" alt="Logo" fill className="object-contain" />
+          </div>
+        </div>
+        <div className="text-sm font-black uppercase tracking-[0.15em] text-gray-500 mt-2">Admin</div>
         <h1 className="text-2xl font-bold text-gray-900 mt-1">Sign in</h1>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
@@ -38,7 +46,22 @@ export default function AdminLoginPage() {
           </div>
           <div>
             <label className="block text-sm text-gray-500">Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none" />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 w-full px-3 py-2 pr-10 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
           {error && <div className="text-sm text-red-600">{error}</div>}
           <button type="submit" disabled={loading} className="w-full px-4 py-2 rounded-full bg-black text-white text-sm font-bold hover:bg-gray-800">

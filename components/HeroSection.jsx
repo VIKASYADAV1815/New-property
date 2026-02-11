@@ -1,7 +1,6 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import SearchForm from "./SearchForm";
 import { useRef } from "react";
 
 export default function HeroSection() {
@@ -51,13 +50,7 @@ export default function HeroSection() {
           PropertySearch.in is a founder-led real estate advisory platform led by <span className="text-sky-400 font-semibold">Akshit Kapoor</span>, bringing over 20 years of hands-on experience across residential projects, builder floors, plotted developments, and buyer advisory.
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <SearchForm />
-        </motion.div>
+        {/* Bottom search box removed */}
       </div>
     </section>
   );
