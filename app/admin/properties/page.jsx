@@ -24,6 +24,8 @@ export default function AdminProperties() {
     beds: "",
     baths: "",
     sqft: "",
+    carpetArea: "",
+    superBuiltUpArea: "",
     description: "",
   });
 
@@ -117,6 +119,8 @@ export default function AdminProperties() {
       beds: "",
       baths: "",
       sqft: "",
+      carpetArea: "",
+      superBuiltUpArea: "",
       description: "",
     });
 
@@ -167,6 +171,8 @@ export default function AdminProperties() {
       beds: item.beds || "",
       baths: item.baths || "",
       sqft: item.sqft || "",
+      carpetArea: item.carpetArea || "",
+      superBuiltUpArea: item.superBuiltUpArea || "",
       description: item.description || "",
     });
 
@@ -486,7 +492,7 @@ export default function AdminProperties() {
                   />
                 </div>
 
-                <div className="md:col-span-2 grid grid-cols-3 gap-6">
+                <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-5 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-1.5">
                       Bedrooms *
@@ -519,7 +525,7 @@ export default function AdminProperties() {
 
                   <div>
                     <label className="block text-sm font-medium mb-1.5">
-                      Area (sqft) *
+                      Total Area *
                     </label>
                     <input
                       type="number"
@@ -529,6 +535,34 @@ export default function AdminProperties() {
                       min="1"
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
                       required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5">
+                      Carpet Area
+                    </label>
+                    <input
+                      type="number"
+                      name="carpetArea"
+                      value={formData.carpetArea}
+                      onChange={handleInputChange}
+                      min="1"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5">
+                      Super Built-up
+                    </label>
+                    <input
+                      type="number"
+                      name="superBuiltUpArea"
+                      value={formData.superBuiltUpArea}
+                      onChange={handleInputChange}
+                      min="1"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
                     />
                   </div>
                 </div>

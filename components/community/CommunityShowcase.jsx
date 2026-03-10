@@ -4,7 +4,7 @@ import Link from "next/link";
 import { communities } from "@/data/communities";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2, Facebook, Instagram, Mail, MessageCircle, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import api from "@/utils/api";
 
@@ -69,16 +69,74 @@ export default function CommunityShowcase({ community, items = [] }) {
     return () => cancelAnimationFrame(t);
   }, [community?.slug, primary]);
 
+  if (!activeProperty && allItems.length === 0) {
+    return (
+      <section className="bg-white py-20">
+        <div className="max-w-350 mx-auto px-6 text-center">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-50 mb-6">
+            <MapPin className="w-10 h-10 text-gray-300" />
+            <div className="mt-12">
+          <div className="max-w-3xl mx-auto text-center">
+            <h3 className="text-3xl font-bold text-gray-900">Nearby Places & Landmarks</h3>
+            <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+              Key connectivity, essential services, and lifestyle amenities surrounding the property, ensuring convenience and a vibrant community experience.
+            </p>
+          </div>
+          <div className="mt-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              {(activeProperty.landmarks || [
+                { name: "City Center", distance: "2.5 km", category: "Commercial" },
+                { name: "Global Hospital", distance: "1.2 km", category: "Healthcare" },
+                { name: "St. Mary's School", distance: "3.0 km", category: "Education" },
+                { name: "Metro Station", distance: "0.8 km", category: "Transport" },
+                { name: "International Airport", distance: "15.0 km", category: "Transport" },
+                { name: "Luxury Mall", distance: "4.5 km", category: "Shopping" }
+              ]).map((landmark, idx) => (
+                <div key={idx} className="p-5 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-1 rounded-full">{landmark.category}</span>
+                    <span className="font-bold text-gray-900">{landmark.distance}</span>
+                  </div>
+                  <h4 className="font-bold text-gray-800 text-lg">{landmark.name}</h4>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">No properties found in {community.name}</h2>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">We couldn't find any active listings in this area at the moment. Please check back later or explore other communities.</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button 
+              onClick={() => router.push('/community')}
+              className="px-8 py-3 rounded-full bg-black text-white font-bold hover:bg-gray-800 transition-all"
+            >
+              Explore Communities
+            </button>
+            <button 
+              onClick={() => router.push('/explore/contact')}
+              className="px-8 py-3 rounded-full border border-gray-200 font-bold hover:bg-gray-50 transition-all"
+            >
+              Contact Support
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const bhkLabel = useMemo(() => {
     const beds = Number(activeProperty?.beds || 0);
     return beds ? `${beds} BHK` : "Luxury Home";
-  }, [activeProperty?.beds]);
+  }, [activeProperty]);
   const heroImages = useMemo(() => {
     const gallery = activeProperty?.images;
     if (Array.isArray(gallery) && gallery.length > 0) return gallery;
     const base = activeProperty?.image || community.image;
-    return [base, community.image, base];
-  }, [activeProperty?.images, activeProperty?.image, community.image]);
+    // Ensure unique images for the fallback to avoid redundant slides
+    const fallback = [base, community.image].filter(Boolean);
+    return Array.from(new Set(fallback));
+  }, [activeProperty, community.image]);
   const [heroIdx, setHeroIdx] = useState(0);
   const nextHero = () => setHeroIdx((i) => (i + 1) % heroImages.length);
   const prevHero = () => setHeroIdx((i) => (i - 1 + heroImages.length) % heroImages.length);
@@ -331,36 +389,70 @@ export default function CommunityShowcase({ community, items = [] }) {
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="text-sm text-gray-500">{activeProperty.location}</div>
+                    <div className="text-sm text-gray-500">{activeProperty?.location}</div>
                     <h3 className="text-2xl font-bold text-gray-900 mt-1">
-                      {activeProperty.title}
+                      {activeProperty?.title}
                     </h3>
-                    {activeProperty.description && (
+                    {activeProperty?.description && (
                       <div className="mt-3 text-sm text-gray-600">
-                        {activeProperty.description}
+                        {activeProperty?.description}
                       </div>
                     )}
 
-                    <div className="grid grid-cols-3 gap-4 mt-6 text-center">
-                      <div className="rounded-2xl bg-gray-50 border border-gray-100 py-3">
-                        <div className="text-xs text-gray-500">Beds</div>
-                        <div className="text-xl font-bold text-gray-900">{activeProperty.beds || 4}</div>
+                    <div className="mt-6 pt-6 border-t border-gray-100 space-y-5">
+                      {/* Area Breakdown */}
+                      <div>
+                        <div className="text-sm text-gray-500 mb-3 flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ruler"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0L15.3 21.3"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+                          Area Breakdown
+                        </div>
+                        <div className="grid grid-cols-2 gap-2.5 text-sm">
+                          <div className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50/70">
+                            <span className="font-medium text-gray-700">Carpet Area</span>
+                            <span className="font-bold text-gray-900">{activeProperty?.carpetArea || (activeProperty?.sqft ? Math.round(parseInt(String(activeProperty?.sqft).replace(/,/g, '')) * 0.7) : "1,960")} <span className="font-normal text-gray-500">sqft</span></span>
+                          </div>
+                          <div className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50/70">
+                            <span className="font-medium text-gray-700">Super Built-up</span>
+                            <span className="font-bold text-gray-900">{activeProperty?.superBuiltUpArea || (activeProperty?.sqft || "2,800")} <span className="font-normal text-gray-500">sqft</span></span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="rounded-2xl bg-gray-50 border border-gray-100 py-3">
-                        <div className="text-xs text-gray-500">Baths</div>
-                        <div className="text-xl font-bold text-gray-900">{activeProperty.baths || 3}</div>
-                      </div>
-                      <div className="rounded-2xl bg-gray-50 border border-gray-100 py-3">
-                        <div className="text-xs text-gray-500">Sqft</div>
-                        <div className="text-xl font-bold text-gray-900">{activeProperty.sqft || "2,800"}</div>
-                      </div>
-                    </div>
 
-                    
-                    <div className="mt-6">
-                      <div className="text-sm text-gray-500">Price</div>
-                      <div className="mt-1 flex items-start justify-between gap-4">
-                        <div className="text-3xl font-bold text-gray-900 leading-tight">{activeProperty.price}</div>
+                      {/* Share Section */}
+                      <div className="pt-5 border-t border-gray-100">
+                        <div className="text-sm text-gray-500 mb-3 flex items-center gap-2">
+                          <Share2 className="w-4 h-4" /> Share Property
+                        </div>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Check out this property: ${activeProperty?.title} at ${activeProperty?.location}`)}`, '_blank')}
+                            className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-all"
+                            title="Share on WhatsApp"
+                          >
+                            <MessageCircle className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`, '_blank')}
+                            className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-all"
+                            title="Share on Facebook"
+                          >
+                            <Facebook className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => window.open(`https://www.instagram.com/`, '_blank')}
+                            className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-all"
+                            title="Share on Instagram"
+                          >
+                            <Instagram className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => window.open(`mailto:?subject=${encodeURIComponent(activeProperty?.title || 'Property')}&body=${encodeURIComponent(`Check out this property: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`, '_blank')}
+                            className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-all"
+                            title="Share via Gmail"
+                          >
+                            <Mail className="w-5 h-5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -380,6 +472,46 @@ export default function CommunityShowcase({ community, items = [] }) {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 border-t border-gray-100 pt-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8">
+              <div className="rounded-3xl border border-gray-200 p-8 bg-gray-50/50">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2.5 rounded-2xl bg-black text-white">
+                    <MapPin className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-gray-900">Nearby Places & Landmarks</h4>
+                    <p className="text-sm text-gray-500 mt-0.5">Key connectivity and essential services around the property</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {(activeProperty.landmarks || [
+                    { name: "City Center", distance: "2.5 km", category: "Commercial" },
+                    { name: "Global Hospital", distance: "1.2 km", category: "Healthcare" },
+                    { name: "St. Mary's School", distance: "3.0 km", category: "Education" },
+                    { name: "Metro Station", distance: "0.8 km", category: "Transport" },
+                    { name: "International Airport", distance: "15.0 km", category: "Transport" },
+                    { name: "Luxury Mall", distance: "4.5 km", category: "Shopping" }
+                  ]).map((landmark, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                      <div className="w-2 h-2 rounded-full bg-sky-500 mt-1.5" />
+                      <div>
+                        <div className="font-bold text-gray-900 text-sm">{landmark.name}</div>
+                        <div className="text-xs text-gray-500 mt-0.5 flex items-center justify-between gap-4">
+                          <span>{landmark.category}</span>
+                          <span className="font-semibold text-sky-600">{landmark.distance}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -578,8 +710,8 @@ export default function CommunityShowcase({ community, items = [] }) {
             <div className="relative mx-auto mt-16 max-w-[min(640px,92vw)] rounded-2xl bg-white shadow-xl border border-gray-200 overflow-hidden">
               <div className="flex items-start justify-between p-5 border-b border-gray-200">
                 <div>
-                  <div className="text-xs text-gray-500">{activeProperty.location}</div>
-                  <div className="text-lg font-bold text-gray-900">{activeProperty.title}</div>
+                  <div className="text-xs text-gray-500">{activeProperty?.location}</div>
+                  <div className="text-lg font-bold text-gray-900">{activeProperty?.title}</div>
                 </div>
                 <button
                   onClick={() => setTourPopupOpen(false)}
@@ -595,11 +727,11 @@ export default function CommunityShowcase({ community, items = [] }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-500">Bedrooms</div>
-                    <div className="font-bold text-gray-900 mt-1">{activeProperty.beds || bhkLabel}</div>
+                    <div className="font-bold text-gray-900 mt-1">{activeProperty?.beds || bhkLabel}</div>
                   </div>
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-500">Price</div>
-                    <div className="font-bold text-sky-600 mt-1">{activeProperty.price}</div>
+                    <div className="font-bold text-sky-600 mt-1">{activeProperty?.price}</div>
                   </div>
                 </div>
 
