@@ -7,6 +7,13 @@ export const properties = [
     beds: 4,
     baths: 5,
     sqft: "7,400",
+    carpetArea: "5,180",
+    superBuiltUpArea: "7,400",
+    landmarks: [
+      { name: "Dehradun Railway Station", distance: "8.5 km", category: "Transport" },
+      { name: "Max Super Speciality Hospital", distance: "4.2 km", category: "Healthcare" },
+      { name: "Pacific Mall", distance: "6.0 km", category: "Shopping" }
+    ],
     image: "https://img.staticmb.com/mbimages/project/Photo_h470_w1080/Project-Photo-25-Project-Malibu-Town-Gurgaon-5000594_600_800_470_1080.jpg",
     images: [
       "https://img.staticmb.com/mbimages/project/Photo_h470_w1080/2025/06/24/Project-Photo-32-Windlass-River-Valley-Dehradun-5118477_1171_1600_470_1080.jpg",
@@ -25,6 +32,13 @@ export const properties = [
     beds: 5,
     baths: 6,
     sqft: "8,000",
+    carpetArea: "5,600",
+    superBuiltUpArea: "8,000",
+    landmarks: [
+      { name: "Mussoorie Library", distance: "3.5 km", category: "Culture" },
+      { name: "JW Marriott", distance: "2.0 km", category: "Hospitality" },
+      { name: "Kempty Falls", distance: "12.0 km", category: "Tourism" }
+    ],
     image: "https://img.staticmb.com/mbphoto/property/cropped_images/2025/Dec/14/Photo_h0_w320/82575711_2_hatsAppImage20251213at12.42.241_0_320.jpeg",
     images: [
       "https://img.staticmb.com/mbimages/project/Photo_h0_w320/2025/02/05/Project-Photo-5-Mist-Dehradun-5427259_576_1024_0_320.jpeg",
