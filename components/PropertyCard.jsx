@@ -56,7 +56,7 @@ export default function PropertyCard({ property, index }) {
         {/* Action Button */}
         <div className="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
              <Link href="/contact" className="w-full">
-               <span className="block w-full py-3 rounded-lg bg-sky-500 text-white hover:bg-sky-600 transition-all duration-300 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+               <span className="block w-full py-3 rounded-lg bg-sky-500 text-white hover:bg-sky-600 transition-all duration-300 text-xs font-bold uppercase tracking-wider items-center justify-center gap-2 shadow-md hover:shadow-lg">
                   <Calendar className="w-4 h-4" />
                   Book a Meeting
                </span>
