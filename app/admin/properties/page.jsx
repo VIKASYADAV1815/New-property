@@ -21,11 +21,10 @@ export default function AdminProperties() {
     city: "Delhi",
     location: "",
     price: "",
-    beds: "",
-    baths: "",
     sqft: "",
     carpetArea: "",
     superBuiltUpArea: "",
+    landmarks: [],
     description: "",
   });
 
@@ -68,7 +67,6 @@ export default function AdminProperties() {
     { key: "city", label: "City" },
     { key: "location", label: "Location" },
     { key: "price", label: "Price" },
-    { key: "beds", label: "Beds" },
   ];
 
   // cleanup object URLs
@@ -116,11 +114,10 @@ export default function AdminProperties() {
       city: "Delhi",
       location: "",
       price: "",
-      beds: "",
-      baths: "",
       sqft: "",
       carpetArea: "",
       superBuiltUpArea: "",
+      landmarks: [],
       description: "",
     });
 
@@ -168,11 +165,10 @@ export default function AdminProperties() {
       city: item.city || "Delhi",
       location: item.location || "",
       price: item.price || "",
-      beds: item.beds || "",
-      baths: item.baths || "",
       sqft: item.sqft || "",
       carpetArea: item.carpetArea || "",
       superBuiltUpArea: item.superBuiltUpArea || "",
+      landmarks: item.landmarks || [],
       description: item.description || "",
     });
 
@@ -492,37 +488,7 @@ export default function AdminProperties() {
                   />
                 </div>
 
-                <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-5 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">
-                      Bedrooms *
-                    </label>
-                    <input
-                      type="number"
-                      name="beds"
-                      value={formData.beds}
-                      onChange={handleInputChange}
-                      min="0"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">
-                      Bathrooms *
-                    </label>
-                    <input
-                      type="number"
-                      name="baths"
-                      value={formData.baths}
-                      onChange={handleInputChange}
-                      min="0"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
-                      required
-                    />
-                  </div>
-
+                <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-1.5">
                       Total Area *
@@ -554,7 +520,7 @@ export default function AdminProperties() {
 
                   <div>
                     <label className="block text-sm font-medium mb-1.5">
-                      Super Built-up
+                      Super Built-up Area
                     </label>
                     <input
                       type="number"
@@ -565,6 +531,63 @@ export default function AdminProperties() {
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Landmarks */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                <label className="block text-sm font-bold text-blue-900 mb-4">
+                  Add Nearby Landmarks
+                </label>
+                <div className="space-y-3">
+                  {formData.landmarks?.map((landmark, idx) => (
+                    <div key={idx} className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Landmark name"
+                        value={landmark.name || ""}
+                        onChange={(e) => {
+                          const newLandmarks = [...formData.landmarks];
+                          newLandmarks[idx].name = e.target.value;
+                          setFormData((prev) => ({ ...prev, landmarks: newLandmarks }));
+                        }}
+                        className="flex-1 border border-gray-300 rounded-lg px-4 py-2"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Distance (e.g., 500m)"
+                        value={landmark.distance || ""}
+                        onChange={(e) => {
+                          const newLandmarks = [...formData.landmarks];
+                          newLandmarks[idx].distance = e.target.value;
+                          setFormData((prev) => ({ ...prev, landmarks: newLandmarks }));
+                        }}
+                        className="flex-1 border border-gray-300 rounded-lg px-4 py-2"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newLandmarks = formData.landmarks.filter((_, i) => i !== idx);
+                          setFormData((prev) => ({ ...prev, landmarks: newLandmarks }));
+                        }}
+                        className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        landmarks: [...(prev.landmarks || []), { name: "", distance: "" }],
+                      }));
+                    }}
+                    className="w-full py-2.5 border-2 border-dashed border-blue-300 text-blue-600 rounded-lg hover:bg-blue-50 font-medium"
+                  >
+                    + Add Landmark
+                  </button>
                 </div>
               </div>
 
