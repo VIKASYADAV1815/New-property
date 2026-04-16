@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  trailingSlash: true, // 👈 this enables trailing slash in all routes
+
   images: {
     unoptimized: true,
     remotePatterns: [

@@ -3,6 +3,18 @@ import { notFound } from "next/navigation";
 import BlogDetailClient from "@/components/blog/BlogDetailClient";
 import api from "@/utils/api";
 
+export async function generateStaticParams() {
+  try {
+    const res = await api.get("/blogs");
+    const allBlogs = res.data.blogs || [];
+    return allBlogs.map((blog) => ({
+      id: blog._id,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 async function getBlog(id) {
   try {
     const res = await api.get(`/blogs/${id}`);

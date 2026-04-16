@@ -2,6 +2,13 @@ import PageHero from "@/components/common/PageHero";
 import PageIntroBar from "@/components/common/PageIntroBar";
 import CommunityShowcase from "@/components/community/CommunityShowcase";
 import api from "@/utils/api";
+import { communities } from "@/data/communities";
+
+export async function generateStaticParams() {
+  return communities.map((community) => ({
+    slug: community.slug,
+  }));
+}
 
 export default async function CommunityPage({ params }) {
   const { slug } = await params;
