@@ -15,7 +15,10 @@ export default async function CommunityPage({ params }) {
   if (!slug) {
     return <div>Community not found</div>;
   }
-  const cityName = slug.charAt(0).toUpperCase() + slug.slice(1);
+  const cityName = slug
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
   let items = [];
   try {
     const { data } = await api.get(`/properties/city/${cityName}`);

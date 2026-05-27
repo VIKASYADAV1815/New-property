@@ -35,6 +35,22 @@ const STATIC_COMMUNITIES = [
     description:
       "Green living with villas, plots, and serene mountain-facing residences.",
   },
+  {
+    slug: "haryana",
+    name: "Haryana",
+    image:
+      "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?q=80&w=1600&auto=format&fit=crop",
+    description:
+      "Fast-growing micro-markets with strong infrastructure and investment momentum.",
+  },
+  {
+    slug: "uttar-pradesh",
+    name: "Uttar Pradesh",
+    image:
+      "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1600&auto=format&fit=crop",
+    description:
+      "High-potential corridors with improving connectivity and mixed-use developments.",
+  },
 ];
 
 export default function CommunityList() {

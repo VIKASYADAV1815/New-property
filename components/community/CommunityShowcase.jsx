@@ -75,74 +75,7 @@ export default function CommunityShowcase({ community, items = [] }) {
         <div className="max-w-350 mx-auto px-6 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-50 mb-6">
             <MapPin className="w-10 h-10 text-gray-300" />
-            <div className="mt-12">
-          <div className="max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900">Nearby Places & Landmarks</h3>
-                <p className="text-sm text-gray-500 mt-0.5">Key connectivity and essential services around the property</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { name: "City Center", distance: "2.5 km", category: "Commercial" },
-                { name: "Global Hospital", distance: "1.2 km", category: "Healthcare" },
-                { name: "St. Mary's School", distance: "3.0 km", category: "Education" },
-                { name: "Metro Station", distance: "0.8 km", category: "Transport" },
-                { name: "International Airport", distance: "15.0 km", category: "Transport" },
-                { name: "Luxury Mall", distance: "4.5 km", category: "Shopping" }
-              ].map((landmark, idx) => {
-                const categoryStyles = {
-                  Transport: { bg: "bg-blue-100", border: "border-blue-300", badge: "bg-blue-200 text-blue-800", icon: "text-blue-700", iconBg: "bg-blue-50" },
-                  Healthcare: { bg: "bg-red-100", border: "border-red-300", badge: "bg-red-200 text-red-800", icon: "text-red-700", iconBg: "bg-red-50" },
-                  Shopping: { bg: "bg-purple-100", border: "border-purple-300", badge: "bg-purple-200 text-purple-800", icon: "text-purple-700", iconBg: "bg-purple-50" },
-                  Education: { bg: "bg-green-100", border: "border-green-300", badge: "bg-green-200 text-green-800", icon: "text-green-700", iconBg: "bg-green-50" },
-                  Commercial: { bg: "bg-orange-100", border: "border-orange-300", badge: "bg-orange-200 text-orange-800", icon: "text-orange-700", iconBg: "bg-orange-50" },
-                  Culture: { bg: "bg-pink-100", border: "border-pink-300", badge: "bg-pink-200 text-pink-800", icon: "text-pink-700", iconBg: "bg-pink-50" },
-                  Hospitality: { bg: "bg-yellow-100", border: "border-yellow-300", badge: "bg-yellow-200 text-yellow-800", icon: "text-yellow-700", iconBg: "bg-yellow-50" },
-                  Tourism: { bg: "bg-cyan-100", border: "border-cyan-300", badge: "bg-cyan-200 text-cyan-800", icon: "text-cyan-700", iconBg: "bg-cyan-50" },
-                };
-                const style = categoryStyles[landmark.category] || categoryStyles.Commercial;
-                return (
-                  <div key={idx} className={`group relative overflow-hidden rounded-2xl border ${style.border} ${style.bg} p-6 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col items-center text-center`}>
-                    {/* Top accent bar */}
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                    
-                    {/* Location Icon */}
-                    {/* Location Icon */}
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${style.iconBg} border ${style.border} group-hover:scale-110 transition-transform`}>
-                      <MapPin className={`w-6 h-6 ${style.icon}`} />
-                    </div>
-                    
-                    {/* Category Badge */}
-                    <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full ${style.badge} mb-3 inline-block`}>
-                      {landmark.category}
-                    </span>
-                    
-                    {/* Landmark Name */}
-                    <h5 className="font-bold text-gray-800 text-base group-hover:text-gray-900 transition-colors leading-snug mb-2">
-                      {landmark.name}
-                    </h5>
-                    
-                    {/* Distance */}
-                    <div className="text-sm font-semibold group-hover:font-bold transition-all">
-                      <span className={`${style.icon} group-hover:scale-110 inline-block transition-transform`}>
-                        {landmark.distance}
-                      </span>
-                    </div>
-                    
-                    {/* Hover indicator */}
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-linear-to-r from-blue-400 to-purple-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center" />
-                  </div>
-                );
-              })}
-            </div>
           </div>
-        </div>
-      </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">No properties found in {community.name}</h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">We couldn't find any active listings in this area at the moment. Please check back later or explore other communities.</p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -428,7 +361,20 @@ export default function CommunityShowcase({ community, items = [] }) {
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="text-sm text-gray-500">{activeProperty?.location}</div>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <div className="text-[11px] font-semibold tracking-wide text-gray-400 uppercase">Location</div>
+                        <div className="text-sm text-gray-600 mt-0.5">
+                          {[activeProperty?.location, activeProperty?.city].filter(Boolean).join(", ") || "Location unavailable"}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="text-[11px] font-semibold tracking-wide text-gray-400 uppercase">Price</div>
+                        <div className="text-lg font-bold text-gray-900 mt-0.5">
+                          {activeProperty?.price || "Price on request"}
+                        </div>
+                      </div>
+                    </div>
                     <h3 className="text-2xl font-bold text-gray-900 mt-1">
                       {activeProperty?.title}
                     </h3>

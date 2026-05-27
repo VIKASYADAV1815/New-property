@@ -22,9 +22,10 @@ export default function Navbar() {
   // Static cities array - customize slugs here
   const communities = [
     { name: "Gurgaon", slug: "gurgaon" },
-    { name: "Delhi", slug: "Delhi" },
+    { name: "Delhi", slug: "delhi" },
     { name: "Dehradun", slug: "dehradun" },
-   
+    { name: "Haryana", slug: "haryana" },
+    { name: "Uttar Pradesh", slug: "uttar-pradesh" },
   ];
 
   const communityTimer = useRef(null);

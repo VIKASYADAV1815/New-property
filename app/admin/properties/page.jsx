@@ -59,7 +59,7 @@ export default function AdminProperties() {
     image3: false,
   });
 
-  const cities = ["Delhi", "Gurgaon", "Dehradun"];
+  const cities = ["Delhi", "Gurgaon", "Dehradun", "Haryana", "Uttar Pradesh"];
 
   const columns = [
     { key: "title", label: "Title" },
