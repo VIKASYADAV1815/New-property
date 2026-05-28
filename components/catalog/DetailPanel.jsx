@@ -6,7 +6,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function DetailPanel({ item }) {
   const [tab, setTab] = useState("Overview");
-  const images = [item?.image, item?.image, item?.image].filter(Boolean);
+  const images = [item?.image, item?.image1, item?.image2, item?.image3]
+    .filter(Boolean)
+    .filter((v, i, a) => a.indexOf(v) === i);
   const [idx, setIdx] = useState(0);
   const nextImg = () => setIdx((i) => (i + 1) % images.length);
   const prevImg = () => setIdx((i) => (i - 1 + images.length) % images.length);
@@ -77,7 +79,7 @@ export default function DetailPanel({ item }) {
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
-        {[item.image, item.image, item.image].map((img, i) => (
+        {images.slice(0, 3).map((img, i) => (
           <div key={i} className="relative h-20 rounded-lg overflow-hidden">
             <Image src={img} alt={`thumb-${i}`} fill className="object-cover" />
           </div>

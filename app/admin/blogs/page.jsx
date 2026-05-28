@@ -505,8 +505,8 @@ export default function AdminBlogs() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 mt-6">
-              {[viewing.image, viewing.image1, viewing.image2, viewing.image3]
-                .filter(Boolean)
+              {Array.from(new Set([viewing.image, viewing.image1, viewing.image2, viewing.image3].filter(Boolean)))
+                .slice(0, 4)
                 .map((img, i) => (
                   <img
                     key={i}

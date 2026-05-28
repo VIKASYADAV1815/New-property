@@ -1,115 +1,91 @@
 "use client";
 
-import { motion, useMotionValue } from "framer-motion";
-import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { Compass, CheckCircle, Search, Headset } from "lucide-react";
 
-const projects = [
+const features = [
   {
-    title: "Camellias",
-    location: "Gurgaon",
-    image:
-      "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=1200&auto=format&fit=crop",
+    icon: Compass,
+    title: "Expert Curation",
+    desc: "Hand-picked properties evaluated for location, developer credibility, and long-term value.",
   },
   {
-    title: "South Estate",
-    location: "Delhi",
-    image:
-      "https://images.unsplash.com/photo-1524549207884-e7d1130ae2f3?q=80&w=687&auto=format&fit=crop",
+    icon: CheckCircle,
+    title: "Verified Developers",
+    desc: "We only work with trusted developers and verify project credentials before listing.",
   },
   {
-    title: "Primanti",
-    location: "Gurgaon",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1200&auto=format&fit=crop",
+    icon: Search,
+    title: "Custom Search",
+    desc: "Advanced filters and personalised alerts help you find the right property faster.",
   },
   {
-    title: "Golf Links",
-    location: "New Delhi",
-    image:
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1200&auto=format&fit=crop",
+    icon: Headset,
+    title: "Concierge Support",
+    desc: "Schedule consultations, site visits, and get dedicated assistance throughout the journey.",
   },
 ];
 
 export default function ProjectMotion() {
-  const x = useMotionValue(0);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const container = containerRef.current;
-    const halfWidth = container.scrollWidth / 2;
-    let animationFrame;
-
-    const speed = 0.3; // px per frame (smooth + slow)
-
-    const loop = () => {
-      let currentX = x.get();
-      currentX -= speed;
-
-      // seamless wrap
-      if (Math.abs(currentX) >= halfWidth) {
-        currentX = 0;
-      }
-
-      x.set(currentX);
-      animationFrame = requestAnimationFrame(loop);
-    };
-
-    animationFrame = requestAnimationFrame(loop);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, [x]);
-
   return (
-    <section className="py-12 sm:py-16 md:py-24 bg-gray-50">
+    <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="mb-10">
-          <span className="text-sm font-bold uppercase tracking-widest text-gray-500">
-            Featured
+        <div className="mb-10 text-center">
+          <span className="text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-gray-500">
+            Why PropertySearch
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-            Curated Property Showcase
+          <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl font-serif leading-tight text-gray-900">
+            Features That Make Finding Property Effortless
           </h2>
+          <p className="mt-3 text-sm text-gray-600 max-w-2xl mx-auto font-serif leading-relaxed">
+            From curated listings to personalised support, we combine technology and expertise to
+            deliver high-quality property opportunities.
+          </p>
         </div>
 
-        <div className="overflow-hidden rounded-2xl bg-white">
-          <motion.div
-            ref={containerRef}
-            style={{ x }}
-            drag="x"
-            dragMomentum
-            dragElastic={0.12}
-            onDragEnd={() => {
-              if (!containerRef.current) return;
-              const halfWidth =
-                containerRef.current.scrollWidth / 2;
-              x.set(x.get() % halfWidth);
-            }}
-            className="flex gap-4 sm:gap-6 p-4 sm:p-6 cursor-grab active:cursor-grabbing will-change-transform"
-          >
-            {[...projects, ...projects].map((p, idx) => (
-              <div
-                key={idx}
-                className="relative w-72 sm:w-80 h-40 sm:h-48 md:h-56 rounded-xl overflow-hidden shrink-0 shadow-sm"
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((f, idx) => {
+            const Icon = f.icon;
+            return (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.45, delay: idx * 0.08 }}
+                className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition"
               >
-                <Image
-                  src={p.image}
-                  alt={p.title}
-                  fill
-                  className="object-cover transition-transform duration-700 hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
-                <div className="absolute bottom-3 left-3 text-white">
-                  <h3 className="font-bold">{p.title}</h3>
-                  <p className="text-xs text-gray-200">
-                    {p.location}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-sky-50 text-sky-600">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-serif font-semibold text-gray-900">{f.title}</h3>
+                    <p className="mt-1 text-sm text-gray-600 font-serif">{f.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 text-center">
+          <a
+            href="/services"
+            className="inline-flex items-center gap-3 bg-sky-600 text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-sky-700 transition"
+          >
+            Explore Our Services
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>

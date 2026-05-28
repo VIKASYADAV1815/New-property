@@ -39,10 +39,56 @@ export default function CommunityShowcase({ community, items = [] }) {
     return value / 10000000;
   };
 
+  const formatPriceDisplay = (property) => {
+    if (!property) return "Price on request";
+    if (property.priceText && String(property.priceText).trim()) return property.priceText;
+    if (property.price != null && typeof property.price === "number" && Number.isFinite(property.price)) {
+      return `₹ ${property.price.toLocaleString("en-IN")}`;
+    }
+    if (property.price && typeof property.price === "string") return property.price;
+    return "Price on request";
+  };
+
+  const getBhkValues = (property) => {
+    if (Array.isArray(property?.bhk)) {
+      return property.bhk.map((value) => String(value).trim()).filter(Boolean);
+    }
+
+    return String(property?.bhk || "")
+      .split(/[,|]/)
+      .map((value) => value.trim())
+      .filter(Boolean);
+  };
+
+  const getBhkNumbers = (property) => {
+    const values = getBhkValues(property);
+    const numbers = values
+      .map((value) => value.match(/\d+/)?.[0])
+      .filter(Boolean)
+      .map(Number);
+
+    if (numbers.length > 0) return numbers;
+
+    const beds = Number(property?.beds || 0);
+    return Number.isFinite(beds) && beds > 0 ? [beds] : [];
+  };
+
+  const getBhkLabel = (property) => {
+    const values = getBhkValues(property);
+    if (values.length > 0) return values.join(", ");
+
+    const beds = Number(property?.beds || 0);
+    return beds ? `${beds} BHK` : "BHK details on request";
+  };
+
   const filteredItems = useMemo(() => {
     return allItems.filter((p) => {
       if (filtersApplied.propertyType !== "Any" && p.tag !== filtersApplied.propertyType) return false;
-      if (filtersApplied.bedrooms !== "Any" && Number(p.beds || 0) !== Number(filtersApplied.bedrooms)) return false;
+      if (filtersApplied.bedrooms !== "Any") {
+        const selectedBhk = Number(filtersApplied.bedrooms);
+        const bhkNumbers = getBhkNumbers(p);
+        if (!bhkNumbers.includes(selectedBhk)) return false;
+      }
       if (filtersApplied.price !== "Any") {
         const cr = parsePriceCr(p.price);
         if (filtersApplied.price === "<10Cr" && !(cr < 10)) return false;
@@ -98,16 +144,18 @@ export default function CommunityShowcase({ community, items = [] }) {
   }
 
   const bhkLabel = useMemo(() => {
-    const beds = Number(activeProperty?.beds || 0);
-    return beds ? `${beds} BHK` : "Luxury Home";
+    return getBhkLabel(activeProperty);
   }, [activeProperty]);
   const heroImages = useMemo(() => {
+    // Prefer explicit property gallery or individual property image fields.
     const gallery = activeProperty?.images;
-    if (Array.isArray(gallery) && gallery.length > 0) return gallery;
-    const base = activeProperty?.image || community.image;
-    // Ensure unique images for the fallback to avoid redundant slides
-    const fallback = [base, community.image].filter(Boolean);
-    return Array.from(new Set(fallback));
+    if (Array.isArray(gallery) && gallery.length > 0) return Array.from(new Set(gallery.filter(Boolean)));
+
+    const explicit = [activeProperty?.image, activeProperty?.image1, activeProperty?.image2, activeProperty?.image3].filter(Boolean);
+    if (explicit.length > 0) return Array.from(new Set(explicit));
+
+    // Only fall back to community image when the property has no images at all.
+    return community.image ? [community.image] : [];
   }, [activeProperty, community.image]);
   const [heroIdx, setHeroIdx] = useState(0);
   const nextHero = () => setHeroIdx((i) => (i + 1) % heroImages.length);
@@ -371,13 +419,21 @@ export default function CommunityShowcase({ community, items = [] }) {
                       <div className="text-right shrink-0">
                         <div className="text-[11px] font-semibold tracking-wide text-gray-400 uppercase">Price</div>
                         <div className="text-lg font-bold text-gray-900 mt-0.5">
-                          {activeProperty?.price || "Price on request"}
+                          {formatPriceDisplay(activeProperty)}
                         </div>
                       </div>
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900 mt-1">
                       {activeProperty?.title}
                     </h3>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700 border border-sky-100">
+                        {bhkLabel}
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-gray-50 px-3 py-1 text-xs font-semibold text-gray-700 border border-gray-200">
+                        {activeProperty?.city || community.name}
+                      </span>
+                    </div>
                     {activeProperty?.description && (
                       <div className="mt-3 text-sm text-gray-600">
                         {activeProperty?.description}
@@ -592,7 +648,7 @@ export default function CommunityShowcase({ community, items = [] }) {
               label="Bedrooms"
               value={filtersDraft.bedrooms}
               onChange={(val) => setFiltersDraft((s) => ({ ...s, bedrooms: val }))}
-              options={["Any", "2", "3", "4", "5", "6"]}
+              options={["Any", "1", "2", "3", "4", "5", "6"]}
             />
           </div>
 
@@ -632,6 +688,7 @@ export default function CommunityShowcase({ community, items = [] }) {
             const pId = p.id || p._id;
             const activeId = activeProperty?.id || activeProperty?._id;
             const isActive = pId === activeId;
+            const cardBhkLabel = getBhkLabel(p);
             return (
             <div 
               key={pId || `${p.title}-${index}`}
@@ -648,7 +705,12 @@ export default function CommunityShowcase({ community, items = [] }) {
               <div className="p-4">
                 <h5 className="font-bold text-gray-900">{p.title}</h5>
                 <div className="text-sm text-gray-500">{p.location}</div>
-                <div className="mt-2 font-bold text-sky-600">{p.price}</div>
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  <div className="font-bold text-sky-600">{formatPriceDisplay(p)}</div>
+                  <div className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-full px-2.5 py-1">
+                    {cardBhkLabel}
+                  </div>
+                </div>
               </div>
             </div>
             );
@@ -744,11 +806,11 @@ export default function CommunityShowcase({ community, items = [] }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-500">Bedrooms</div>
-                    <div className="font-bold text-gray-900 mt-1">{activeProperty?.beds || bhkLabel}</div>
+                    <div className="font-bold text-gray-900 mt-1">{bhkLabel}</div>
                   </div>
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                     <div className="text-xs text-gray-500">Price</div>
-                    <div className="font-bold text-sky-600 mt-1">{activeProperty?.price}</div>
+                    <div className="font-bold text-sky-600 mt-1">{formatPriceDisplay(activeProperty)}</div>
                   </div>
                 </div>
 

@@ -19,14 +19,16 @@ export default function Navbar() {
   const [properties, setProperties] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  // Static cities array - customize slugs here
-  const communities = [
-    { name: "Gurgaon", slug: "gurgaon" },
-    { name: "Delhi", slug: "delhi" },
-    { name: "Dehradun", slug: "dehradun" },
-    { name: "Haryana", slug: "haryana" },
-    { name: "Uttar Pradesh", slug: "uttar-pradesh" },
-  ];
+  // Default static communities (used as fallback)
+  const defaultCommunities = [
+    { name: "Gurgaon", slug: "gurgaon", projects: 0 },
+    { name: "Delhi", slug: "delhi", projects: 0 },
+    { name: "Dehradun", slug: "dehradun", projects: 0 },
+    { name: "Haryana", slug: "haryana", projects: 0 },
+    { name: "Uttar Pradesh", slug: "uttar-pradesh", projects: 0 },
+  ].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+
+  const [communities, setCommunities] = useState(defaultCommunities);
 
   const communityTimer = useRef(null);
   const exploreTimer = useRef(null);
@@ -35,13 +37,53 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const pathname = usePathname();
   
-  // Fetch only properties from API
+  const toSlug = (value) =>
+    String(value || "")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+
+  const mapCommunitiesFromProperties = (propertyItems = []) => {
+    const cityMap = new Map();
+
+    propertyItems.forEach((item) => {
+      const city = String(item?.city || "").trim();
+      if (!city) return;
+
+      const key = city.toLowerCase();
+      if (!cityMap.has(key)) {
+        cityMap.set(key, {
+          name: city,
+          slug: toSlug(city),
+          projects: 1,
+          image: "/bg9.avif",
+        });
+        return;
+      }
+
+      const existing = cityMap.get(key);
+      cityMap.set(key, { ...existing, projects: (existing.projects || 0) + 1 });
+    });
+
+    return Array.from(cityMap.values()).sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+  };
+
+  // Fetch properties from backend API and derive cities for navbar
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoadingData(true);
         const propertiesRes = await api.get("/properties");
-        setProperties(propertiesRes.data?.items || propertiesRes.data || []);
+        const fetchedProperties = propertiesRes.data?.items || propertiesRes.data || [];
+        setProperties(fetchedProperties);
+
+        const cityCommunities = mapCommunitiesFromProperties(fetchedProperties);
+        if (cityCommunities.length > 0) {
+          setCommunities(cityCommunities);
+        }
       } catch (err) {
         console.error("Failed to fetch navbar properties:", err);
       } finally {
@@ -267,9 +309,9 @@ export default function Navbar() {
                         className="flex items-center justify-between gap-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-50"
                       >
                         <span>{c.name}</span>
-                        <span className="text-xs font-bold text-sky-600">
-                          {c.projects}
-                        </span>
+                        {typeof c.projects === "number" && c.projects > 0 ? (
+                          <span className="text-xs font-bold text-sky-600">{c.projects}</span>
+                        ) : null}
                       </Link>
                     ))}
                   </div>
@@ -371,7 +413,9 @@ export default function Navbar() {
                               </div>
                               <div className="min-w-0">
                                 <div className="font-bold text-gray-900 truncate">{c.name}</div>
-                                <div className="text-xs text-gray-500">{c.projects} projects</div>
+                                {typeof c.projects === "number" && c.projects > 0 ? (
+                                  <div className="text-xs text-gray-500">{c.projects} projects</div>
+                                ) : null}
                               </div>
                             </Link>
                           ))}
@@ -474,7 +518,9 @@ export default function Navbar() {
                                   </div>
                                   <div className="min-w-0">
                                     <div className="font-bold text-gray-900 truncate">{c.name}</div>
-                                    <div className="text-xs text-gray-500">{c.projects} projects</div>
+                                    {typeof c.projects === "number" && c.projects > 0 ? (
+                                      <div className="text-xs text-gray-500">{c.projects} projects</div>
+                                    ) : null}
                                   </div>
                                 </Link>
                               ))}

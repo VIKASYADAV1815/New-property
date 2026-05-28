@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import AdminTable from "@/components/admin/AdminTable";
+import Link from "next/link";
 import api from "@/utils/api";
 
 export default function AdminProperties() {
@@ -21,12 +22,15 @@ export default function AdminProperties() {
     city: "Delhi",
     location: "",
     price: "",
+    bhk: ["2 BHK"],
     sqft: "",
     carpetArea: "",
     superBuiltUpArea: "",
     landmarks: [],
     description: "",
   });
+
+  const [customBhk, setCustomBhk] = useState("");
 
   // store local files
   const [files, setFiles] = useState({
@@ -60,9 +64,69 @@ export default function AdminProperties() {
   });
 
   const cities = ["Delhi", "Gurgaon", "Dehradun", "Haryana", "Uttar Pradesh"];
+  const [citiesList, setCitiesList] = useState(cities);
+  const [customCityInput, setCustomCityInput] = useState("");
+  const bhkPresets = ["Studio", "1 BHK", "2 BHK", "3 BHK", "4 BHK", "5 BHK", "6 BHK"];
+
+  const toTitleCase = (value) =>
+    String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\b\w/g, (ch) => ch.toUpperCase());
+
+  const mergeUniqueCities = (...cityGroups) => {
+    const merged = cityGroups.flat().filter(Boolean);
+    const map = new Map();
+    merged.forEach((city) => {
+      const normalized = String(city).trim();
+      if (!normalized) return;
+      const key = normalized.toLowerCase();
+      if (!map.has(key)) map.set(key, normalized);
+    });
+    return Array.from(map.values());
+  };
+
+  const normalizeBhkValues = (value) => {
+    const values = Array.isArray(value)
+      ? value
+      : String(value || "")
+          .split(/[,|]/)
+          .map((item) => item.trim());
+
+    return Array.from(new Set(values.filter(Boolean)));
+  };
+
+  const formatBhkValue = (value) => {
+    const values = normalizeBhkValues(value);
+    return values.length > 0 ? values.join(", ") : "";
+  };
+
+  const toggleBhk = (bhkValue) => {
+    setFormData((prev) => {
+      const current = normalizeBhkValues(prev.bhk);
+      const next = current.includes(bhkValue)
+        ? current.filter((item) => item !== bhkValue)
+        : [...current, bhkValue];
+      return { ...prev, bhk: next };
+    });
+  };
+
+  const addCustomBhk = () => {
+    const value = customBhk.trim();
+    if (!value) return;
+
+    setFormData((prev) => {
+      const current = normalizeBhkValues(prev.bhk);
+      if (current.includes(value)) return prev;
+      return { ...prev, bhk: [...current, value] };
+    });
+
+    setCustomBhk("");
+  };
 
   const columns = [
     { key: "title", label: "Title" },
+    { key: "bhkDisplay", label: "BHK" },
     { key: "status", label: "Type" },
     { key: "city", label: "City" },
     { key: "location", label: "Location" },
@@ -85,13 +149,16 @@ export default function AdminProperties() {
       else if (data?.items) propList = data.items;
       else propList = [];
 
-      // Transform _id to id for consistency
+      // Transform _id to id for consistency and prefer showing entered priceText
       propList = propList.map(prop => ({
         ...prop,
-        id: prop._id || prop.id
+        id: prop._id || prop.id,
+        bhkDisplay: formatBhkValue(prop.bhk),
+        price: prop.priceText ?? (prop.price != null && typeof prop.price === 'number' ? `₹ ${prop.price.toLocaleString('en-IN')}` : (prop.price ?? "")),
       }));
 
       setItems(propList);
+      setCitiesList((prev) => mergeUniqueCities(cities, prev, propList.map((p) => p.city)));
     } catch (err) {
       console.log("properties load fail", err);
       alert("Failed to load properties");
@@ -105,6 +172,11 @@ export default function AdminProperties() {
     return () => cleanupPreviews();
   }, []);
 
+  // Images array for the viewing modal (deduped)
+  const viewingImages = viewing
+    ? Array.from(new Set([viewing.image, viewing.image1, viewing.image2, viewing.image3].filter(Boolean)))
+    : [];
+
   const resetForm = () => {
     cleanupPreviews();
 
@@ -114,12 +186,15 @@ export default function AdminProperties() {
       city: "Delhi",
       location: "",
       price: "",
+      bhk: ["2 BHK"],
       sqft: "",
       carpetArea: "",
       superBuiltUpArea: "",
       landmarks: [],
       description: "",
     });
+
+    setCustomBhk("");
 
     setFiles({
       image: null,
@@ -159,15 +234,18 @@ export default function AdminProperties() {
   const openEdit = (item) => {
     cleanupPreviews();
 
+    const existingBhk = normalizeBhkValues(item.bhk || "2 BHK");
+
     setFormData({
       status: item.status || "buy",
       title: item.title || "",
       city: item.city || "Delhi",
       location: item.location || "",
-      price: item.price || "",
-      sqft: item.sqft || "",
-      carpetArea: item.carpetArea || "",
-      superBuiltUpArea: item.superBuiltUpArea || "",
+      price: item.priceText ?? (item.price != null ? String(item.price) : ""),
+      bhk: existingBhk.length > 0 ? existingBhk : ["2 BHK"],
+      sqft: item.sqft ?? "",
+      carpetArea: item.carpetArea ?? "",
+      superBuiltUpArea: item.superBuiltUpArea ?? "",
       landmarks: item.landmarks || [],
       description: item.description || "",
     });
@@ -195,12 +273,28 @@ export default function AdminProperties() {
       image3: item.image3 || null,
     });
 
-    setEditing(item);
+    setCitiesList((prev) => mergeUniqueCities(cities, prev, [item.city]));
+
+    setEditing({ ...item, id: item.id || item._id });
     setOpen(true);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const numericFields = ["sqft", "carpetArea", "superBuiltUpArea"];
+
+    if (numericFields.includes(name)) {
+      const val = value === "" ? "" : Number(value);
+      setFormData((prev) => ({ ...prev, [name]: val }));
+      return;
+    }
+
+    if (name === "price") {
+      // keep raw price string (allows values like "32 lakhs")
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -254,16 +348,57 @@ export default function AdminProperties() {
       return alert("Main Image is required!");
     }
 
+    const nextBhk = normalizeBhkValues(formData.bhk);
+    if (nextBhk.length === 0) {
+      return alert("Please add at least one BHK option");
+    }
+
+    // parse price: accept numeric or freeform strings like "32 lakhs" or "3.2 cr"
+    const parsePriceText = (txt) => {
+      if (txt === undefined || txt === null) return NaN;
+      const s = String(txt).toLowerCase();
+      const numMatch = s.match(/[0-9,\.]+/);
+      if (!numMatch) return NaN;
+      const num = Number(numMatch[0].replace(/,/g, ""));
+      let multiplier = 1;
+      if (/lakh|lac/.test(s)) multiplier = 100000;
+      else if (/cr|crore/.test(s)) multiplier = 10000000;
+      else if (/k\b/.test(s)) multiplier = 1000;
+      return num * multiplier;
+    };
+
+    const rawPrice = formData.price;
+    const priceNumFromRaw = Number(String(rawPrice || "").replace(/[^0-9.-]+/g, ""));
+    const priceNum = Number.isFinite(priceNumFromRaw) && priceNumFromRaw !== 0 ? priceNumFromRaw : parsePriceText(rawPrice);
+    const sqftNum = formData.sqft === "" || formData.sqft === null ? null : Number(formData.sqft);
+    const carpetNum = formData.carpetArea === "" || formData.carpetArea === null ? null : Number(formData.carpetArea);
+    const superNum = formData.superBuiltUpArea === "" || formData.superBuiltUpArea === null ? null : Number(formData.superBuiltUpArea);
+
+    if (!Number.isFinite(priceNum) && !(rawPrice && String(rawPrice).trim())) return alert("Please enter a valid price or descriptive price text");
+
     const payload = {
-      ...formData,
-      ...uploadedUrls, // attach urls
+      status: formData.status,
+      title: formData.title,
+      city: formData.city,
+      location: formData.location,
+      price: Number.isFinite(priceNum) ? priceNum : undefined,
+      priceText: rawPrice ? String(rawPrice) : undefined,
+      bhk: nextBhk,
+      sqft: sqftNum,
+      carpetArea: carpetNum,
+      superBuiltUpArea: superNum,
+      landmarks: formData.landmarks || [],
+      description: formData.description,
+      ...uploadedUrls,
     };
 
     try {
       setLoading(true);
 
       if (editing) {
-        await api.put(`/properties/${editing._id}`, payload);
+        const id = editing.id || editing._id;
+        if (!id) throw new Error("Missing property id for update");
+        await api.put(`/properties/${id}`, payload);
       } else {
         await api.post("/properties", payload);
       }
@@ -452,12 +587,49 @@ export default function AdminProperties() {
                     className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
                     required
                   >
-                    {cities.map((c) => (
+                    {citiesList.map((c) => (
                       <option key={c} value={c}>
                         {c}
                       </option>
                     ))}
                   </select>
+
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      type="text"
+                      value={customCityInput}
+                      onChange={(e) => setCustomCityInput(e.target.value)}
+                      placeholder="Add custom city (e.g. Koramangala)"
+                      className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5"
+                    />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const rawName = String(customCityInput || "").trim();
+                        if (!rawName) return alert("Enter a city name");
+
+                        const name = toTitleCase(rawName);
+                        const existing = (citiesList || []).find(
+                          (city) => String(city).trim().toLowerCase() === name.toLowerCase()
+                        );
+                        const selectedCity = existing || name;
+
+                        setCitiesList((prev) => mergeUniqueCities(cities, prev, [selectedCity]));
+                        setFormData((prev) => ({ ...prev, city: selectedCity }));
+                        setCustomCityInput("");
+
+                        // If communities API exists in this environment, trigger non-blocking refresh.
+                        try {
+                          window.dispatchEvent(new Event("admin:communities:changed"));
+                        } catch (e) {
+                          // ignore
+                        }
+                      }}
+                      className="px-4 py-2.5 rounded-lg bg-sky-600 text-white font-semibold hover:bg-sky-700"
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -486,6 +658,65 @@ export default function AdminProperties() {
                     className="w-full border border-gray-300 rounded-lg px-4 py-2.5"
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">
+                    Apartment Types (BHK) *
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {bhkPresets.map((preset) => {
+                      const active = normalizeBhkValues(formData.bhk).includes(preset);
+                      return (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => toggleBhk(preset)}
+                          className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${active ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"}`}
+                        >
+                          {preset}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <input
+                      type="text"
+                      value={customBhk}
+                      onChange={(e) => setCustomBhk(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addCustomBhk();
+                        }
+                      }}
+                      placeholder="Add custom type, e.g. 2.5 BHK or Duplex"
+                      className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-2.5"
+                    />
+                    <button
+                      type="button"
+                      onClick={addCustomBhk}
+                      className="px-4 py-2.5 rounded-lg bg-sky-600 text-white font-semibold hover:bg-sky-700"
+                    >
+                      Add
+                    </button>
+                  </div>
+
+                  {normalizeBhkValues(formData.bhk).length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {normalizeBhkValues(formData.bhk).map((value) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => toggleBhk(value)}
+                          className="px-3 py-1.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-xs font-semibold hover:bg-sky-100"
+                        >
+                          {value} ×
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -686,42 +917,90 @@ export default function AdminProperties() {
         </div>
       )}
 
-      {/* View Modal */}
+      {/* View Modal (improved layout) */}
       {viewing && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+          <div className="bg-white rounded-2xl p-6 max-w-6xl w-full max-h-[92vh] overflow-y-auto relative">
             <button
-              className="absolute top-6 right-6 text-3xl text-gray-600 hover:text-black"
+              className="absolute top-4 right-4 text-3xl text-gray-600 hover:text-black"
               onClick={() => setViewing(null)}
             >
               ×
             </button>
 
-            <h2 className="text-3xl font-bold mb-3">{viewing.title}</h2>
-            <p className="text-gray-600 mb-4 uppercase font-medium">
-              {viewing.status} • {viewing.city} • {viewing.location}
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left: Gallery */}
+              <div>
+                <div className="relative w-full h-72 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                  {viewingImages[0] ? (
+                    <img src={viewingImages[0]} alt={viewing.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">No image</div>
+                  )}
+                </div>
 
-            <p className="text-4xl font-bold text-green-700 mb-8">
-              ₹ {viewing.price.toLocaleString("en-IN")}
-            </p>
+                {viewingImages.length > 1 && (
+                  <div className="mt-4 grid grid-cols-4 gap-3">
+                    {viewingImages.slice(0, 4).map((img, i) => (
+                      <div key={i} className="h-20 rounded-lg overflow-hidden border border-gray-200">
+                        <img src={img} alt={`thumb-${i}`} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              {[viewing.image, viewing.image1, viewing.image2, viewing.image3]
-                .filter(Boolean)
-                .map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`Property image ${i + 1}`}
-                    className="w-full h-48 object-cover rounded-xl shadow-md"
-                  />
-                ))}
+              {/* Right: Details */}
+              <div>
+                <h2 className="text-2xl font-bold">{viewing.title}</h2>
+                <div className="text-sm text-gray-500 mt-1">
+                  {viewing.status} • {formatBhkValue(viewing.bhk) || "BHK N/A"} • {viewing.city} • {viewing.location}
+                </div>
+
+                <div className="mt-4">
+                  <div className="text-xs text-gray-500">Price</div>
+                  <div className="text-3xl font-bold text-green-700 mt-1">
+                    {viewing.priceText ? (
+                      viewing.priceText
+                    ) : (viewing.price != null && typeof viewing.price === 'number' && Number.isFinite(viewing.price)) ? (
+                      `₹ ${viewing.price.toLocaleString('en-IN')}`
+                    ) : (
+                      viewing.price || "Price on request"
+                    )}
+                  </div>
+                </div>
+
+                {viewing.description && (
+                  <p className="mt-4 text-gray-700">{viewing.description}</p>
+                )}
+
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-gray-50 border flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Carpet Area</span>
+                    <span className="font-bold text-gray-900">{viewing.carpetArea || (viewing.sqft ? Math.round(parseInt(String(viewing.sqft).replace(/,/g, '')) * 0.7) : '—')} sqft</span>
+                  </div>
+                  <div className="p-3 rounded-lg bg-gray-50 border flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Super Built-up</span>
+                    <span className="font-bold text-gray-900">{viewing.superBuiltUpArea || (viewing.sqft || '—')} sqft</span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex gap-3">
+                  <Link href="/explore/contact" className="flex-1">
+                    <button className="w-full px-4 py-3 rounded-full border border-gray-300 text-sm font-bold hover:bg-gray-50 transition-colors">
+                      Contact
+                    </button>
+                  </Link>
+                  <Link href="/explore/contact" className="flex-1">
+                    <button
+                      className="w-full px-4 py-3 rounded-full bg-black text-white text-sm font-bold hover:bg-gray-800 transition-colors"
+                    >
+                      Request a tour
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
-
-            <p className="text-gray-800 whitespace-pre-line leading-relaxed">
-              {viewing.description}
-            </p>
           </div>
         </div>
       )}

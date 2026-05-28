@@ -28,8 +28,10 @@ export default function PropertyCard({ item, onSelect }) {
         <h3 className="font-bold text-base md:text-lg text-gray-900 mb-0.5">{item.title}</h3>
         {item.location && <p className="text-xs md:text-sm text-gray-500 mb-2">{item.location}</p>}
         <div className="flex items-center justify-between">
-          {item.price ? (
-            <p className="font-bold text-sky-600">{item.price}</p>
+          {item.priceText ? (
+            <p className="font-bold text-sky-600">{item.priceText}</p>
+          ) : item.price != null && typeof item.price === 'number' && Number.isFinite(item.price) ? (
+            <p className="font-bold text-sky-600">₹ {item.price.toLocaleString('en-IN')}</p>
           ) : (
             <p className="text-xs text-gray-500">{item.date || ""}</p>
           )}

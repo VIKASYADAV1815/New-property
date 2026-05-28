@@ -6,6 +6,17 @@ import Link from "next/link";
 
 export default function PropertyCard({ property, index }) {
   const beds = Number(property?.beds);
+  const bhkValues = Array.isArray(property?.bhk)
+    ? property.bhk.map((value) => String(value).trim()).filter(Boolean)
+    : String(property?.bhk || "")
+        .split(/[,|]/)
+        .map((value) => value.trim())
+        .filter(Boolean);
+  const bedroomText = bhkValues.length > 0
+    ? bhkValues.join(", ")
+    : Number.isFinite(beds) && beds > 0
+      ? `${beds} BHK`
+      : "BHK details on request";
 
   return (
     <motion.div
@@ -33,15 +44,20 @@ export default function PropertyCard({ property, index }) {
         </div>
 
         <div className="mb-6">
-            <p className="text-sm font-bold text-gray-900">Starting From</p>
-            <p className="text-xl font-bold text-gray-900">{property.price}</p>
+          <p className="text-sm font-bold text-gray-900">Starting From</p>
+          <p className="text-xl font-bold text-gray-900">{(() => {
+            const txt = property.priceText ?? property.price;
+            if (property.priceText) return txt;
+            if (property.price != null && typeof property.price === 'number' && Number.isFinite(property.price)) return `₹ ${property.price.toLocaleString('en-IN')}`;
+            return txt ?? "";
+          })()}</p>
         </div>
 
         {/* Specs Row */}
          <div className="flex items-center gap-4 text-xs text-gray-500 font-medium mb-6">
             <div className="flex items-center gap-1.5">
                  <Bed className="w-4 h-4 text-gray-400" />
-              <span>{Number.isFinite(beds) && beds > 0 ? `${beds} & ${beds + 1} Bedroom` : "Bedroom details on request"}</span>
+            <span>{bedroomText}</span>
             </div>
          </div>
 
