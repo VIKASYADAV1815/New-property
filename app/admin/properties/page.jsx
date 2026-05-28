@@ -19,7 +19,7 @@ export default function AdminProperties() {
   const [formData, setFormData] = useState({
     status: "buy",
     title: "",
-    city: "Delhi",
+    city: "Gurgaon",
     location: "",
     price: "",
     bhk: ["2 BHK"],
@@ -63,7 +63,7 @@ export default function AdminProperties() {
     image3: false,
   });
 
-  const cities = ["Delhi", "Gurgaon", "Dehradun", "Haryana", "Uttar Pradesh"];
+  const cities = ["Gurgaon", "Dehradun", "Haryana", "Uttar Pradesh"];
   const [citiesList, setCitiesList] = useState(cities);
   const [customCityInput, setCustomCityInput] = useState("");
   const bhkPresets = ["Studio", "1 BHK", "2 BHK", "3 BHK", "4 BHK", "5 BHK", "6 BHK"];
@@ -183,7 +183,7 @@ export default function AdminProperties() {
     setFormData({
       status: "buy",
       title: "",
-      city: "Delhi",
+      city: "Gurgaon",
       location: "",
       price: "",
       bhk: ["2 BHK"],
@@ -239,7 +239,7 @@ export default function AdminProperties() {
     setFormData({
       status: item.status || "buy",
       title: item.title || "",
-      city: item.city || "Delhi",
+      city: item.city || "Gurgaon",
       location: item.location || "",
       price: item.priceText ?? (item.price != null ? String(item.price) : ""),
       bhk: existingBhk.length > 0 ? existingBhk : ["2 BHK"],
