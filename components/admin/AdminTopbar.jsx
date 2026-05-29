@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { LogOut, Search, Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import api from "@/utils/api";
 
@@ -10,6 +10,7 @@ export default function AdminTopbar({ user, onMenu }) {
   const [q, setQ] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [admin, setAdmin] = useState(null);
 
   const handleLogout = async () => {
     setLoading(true);
@@ -27,6 +28,28 @@ export default function AdminTopbar({ user, onMenu }) {
       setShowConfirm(false);
     }
   };
+
+  useEffect(() => {
+    let mounted = true;
+    api
+      .get("/admin/me")
+      .then((res) => {
+        if (!mounted) return;
+        setAdmin(res.data?.admin || null);
+      })
+      .catch(() => {})
+      .finally(() => {});
+
+    const onUpdated = (e) => {
+      setAdmin(e?.detail || null);
+    };
+    window.addEventListener("adminProfileUpdated", onUpdated);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener("adminProfileUpdated", onUpdated);
+    };
+  }, []);
 
   return (
     <>
@@ -59,9 +82,19 @@ export default function AdminTopbar({ user, onMenu }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-700">
-              {user?.role?.[0]?.toUpperCase() || "A"}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-700">
+                {admin?.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={admin.photo} alt={admin?.name || "Admin"} className="h-full w-full object-cover" />
+                ) : (
+                  <span>{(admin?.name?.[0] || "A").toUpperCase()}</span>
+                )}
+              </div>
+              <div className="hidden sm:inline text-sm font-medium text-gray-700">
+                {admin?.name || "Admin"}
+              </div>
             </div>
 
             <button

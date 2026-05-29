@@ -11,6 +11,7 @@ const links = [
   { href: "/admin/properties", label: "Properties", icon: Home },
   { href: "/admin/contact", label: "Contact Form Details", icon: Users },
   { href: "/admin/tour-bookings", label: "Tour Bookings and Enquiries", icon: Settings },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default function AdminSidebar() {
