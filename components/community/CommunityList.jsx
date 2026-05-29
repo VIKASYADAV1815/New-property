@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
+import api from "@/utils/api";
+import { useState } from "react";
 
 /* ============================
    STATIC COMMUNITY DATA
@@ -53,9 +55,46 @@ const STATIC_COMMUNITIES = [
   },
 ];
 
+const CITY_META = {
+  gurgaon: {
+    image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?q=80&w=1600&auto=format&fit=crop",
+    description: "Premium high-rise residences, global business hubs, and luxury developments.",
+  },
+  delhi: {
+    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1600&auto=format&fit=crop",
+    description: "Iconic neighborhoods, bungalows, and limited-edition luxury homes.",
+  },
+  dehradun: {
+    image: "https://i.pinimg.com/736x/26/69/2a/26692a44a6a5dffc8e5dd41f8991c275.jpg",
+    description: "Green living with villas, plots, and serene mountain-facing residences.",
+  },
+  haryana: {
+    image: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?q=80&w=1600&auto=format&fit=crop",
+    description: "Fast-growing micro-markets with strong infrastructure and investment momentum.",
+  },
+  "uttar-pradesh": {
+    image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1600&auto=format&fit=crop",
+    description: "High-potential corridors with improving connectivity and mixed-use developments.",
+  },
+};
+
+const slugifyCity = (value) =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+
+const titleCase = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+
 export default function CommunityList() {
   const sectionRef = useRef(null);
   const pathname = usePathname();
+  const [communities, setCommunities] = useState(STATIC_COMMUNITIES);
 
   /* ============================
      GSAP ENTRY ANIMATION
@@ -80,6 +119,57 @@ export default function CommunityList() {
     return () => cancelAnimationFrame(raf);
   }, [pathname]);
 
+  useEffect(() => {
+    let mounted = true;
+
+    const loadCommunities = async () => {
+      try {
+        const { data } = await api.get("/properties");
+        const items = Array.isArray(data?.items) ? data.items : [];
+
+        const byCity = new Map();
+        for (const item of items) {
+          const rawCity = String(item?.city || "").trim();
+          if (!rawCity) continue;
+          const slug = slugifyCity(rawCity);
+          if (!slug) continue;
+          if (!byCity.has(slug)) {
+            byCity.set(slug, {
+              slug,
+              name: titleCase(rawCity),
+            });
+          }
+        }
+
+        const nextCommunities = Array.from(byCity.values())
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((city) => {
+            const meta = CITY_META[city.slug];
+            return {
+              ...city,
+              image:
+                meta?.image ||
+                "https://images.unsplash.com/photo-1515263487990-61b07816b324?q=80&w=1600&auto=format&fit=crop",
+              description:
+                meta?.description ||
+                "Discover active listings, location insights, and curated opportunities in this market.",
+            };
+          });
+
+        if (mounted && nextCommunities.length > 0) {
+          setCommunities(nextCommunities);
+        }
+      } catch {
+        // Keep static fallback when API is not reachable.
+      }
+    };
+
+    loadCommunities();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <section ref={sectionRef} className="relative z-10 py-24 bg-white">
       <div className="max-w-350 mx-auto px-6">
@@ -97,7 +187,7 @@ export default function CommunityList() {
 
         {/* Community Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {STATIC_COMMUNITIES.map((c, idx) => (
+          {communities.map((c, idx) => (
             <motion.div
               key={c.slug}
               initial={{ opacity: 0, y: 20 }}
@@ -131,7 +221,7 @@ export default function CommunityList() {
 
                 <div className="mt-4">
                   <Link
-                    href={`/community/${c.slug}`}
+                    href={`/community/city?slug=${encodeURIComponent(c.slug)}`}
                     className="inline-block px-4 py-2 rounded-full border border-gray-300
                                text-sm font-bold transition-all
                                hover:bg-sky-500 hover:text-white hover:border-sky-500"

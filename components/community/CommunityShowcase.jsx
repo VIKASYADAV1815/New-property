@@ -617,7 +617,7 @@ export default function CommunityShowcase({ community, items = [] }) {
                           key={c.slug}
                           onClick={() => {
                             setLocationOpen(false);
-                            router.push(`/community/${c.slug}`);
+                            router.push(`/community/city?slug=${encodeURIComponent(c.slug)}`);
                           }}
                           className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                         >
