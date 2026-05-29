@@ -63,7 +63,7 @@ export default function AdminProperties() {
     image3: false,
   });
 
-  const cities = ["Gurgaon", "Dehradun", "Haryana", "Uttar Pradesh"];
+  const cities = ["Gurgaon", "Delhi", "Dehradun", "Haryana", "Uttar Pradesh"];
   const [citiesList, setCitiesList] = useState(cities);
   const [customCityInput, setCustomCityInput] = useState("");
   const bhkPresets = ["Studio", "1 BHK", "2 BHK", "3 BHK", "4 BHK", "5 BHK", "6 BHK"];

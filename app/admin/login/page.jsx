@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
+import api from "@/utils/api";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -16,18 +17,15 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const json = await res.json();
-    setLoading(false);
-    if (!json.ok) {
-      setError(json.error || "Login failed");
-      return;
+    try {
+      await api.post("/admin/login", { email, password });
+      router.push("/admin");
+    } catch (err) {
+      console.error(err);
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
-    router.push("/admin");
   };
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
