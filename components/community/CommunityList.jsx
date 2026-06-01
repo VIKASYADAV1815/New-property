@@ -91,6 +91,13 @@ const titleCase = (value) =>
     .toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
+const normalizeCity = (value) => {
+  const city = String(value || "").trim();
+  if (!city) return "";
+  if (city.toLowerCase() === "new delhi") return "Delhi";
+  return city;
+};
+
 export default function CommunityList() {
   const sectionRef = useRef(null);
   const pathname = usePathname();
@@ -129,7 +136,7 @@ export default function CommunityList() {
 
         const byCity = new Map();
         for (const item of items) {
-          const rawCity = String(item?.city || "").trim();
+          const rawCity = normalizeCity(item?.city);
           if (!rawCity) continue;
           const slug = slugifyCity(rawCity);
           if (!slug) continue;

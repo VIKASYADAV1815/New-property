@@ -3,6 +3,11 @@ import PageIntroBar from "@/components/common/PageIntroBar";
 import CommunityShowcase from "@/components/community/CommunityShowcase";
 import api from "@/utils/api";
 import { communities } from "@/data/communities";
+import {
+  getCityCandidatesFromSlug,
+  mergeUniqueProperties,
+  prettyCityFromSlug,
+} from "@/utils/communityCity";
 
 export async function generateStaticParams() {
   return communities.map((community) => ({
@@ -15,14 +20,21 @@ export default async function CommunityPage({ params }) {
   if (!slug) {
     return <div>Community not found</div>;
   }
-  const cityName = slug
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-    .join(" ");
+  const cityName = prettyCityFromSlug(slug);
+  const cityCandidates = getCityCandidatesFromSlug(slug);
   let items = [];
   try {
-    const { data } = await api.get(`/properties/city/${cityName}`);
-    items = data?.items || [];
+    const groups = await Promise.all(
+      cityCandidates.map(async (city) => {
+        try {
+          const { data } = await api.get(`/properties/city/${encodeURIComponent(city)}`);
+          return Array.isArray(data?.items) ? data.items : [];
+        } catch {
+          return [];
+        }
+      })
+    );
+    items = mergeUniqueProperties(groups);
   } catch (err) {
     console.error(err);
   }

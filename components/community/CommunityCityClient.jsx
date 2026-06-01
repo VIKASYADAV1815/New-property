@@ -5,15 +5,15 @@ import PageHero from "@/components/common/PageHero";
 import PageIntroBar from "@/components/common/PageIntroBar";
 import CommunityShowcase from "@/components/community/CommunityShowcase";
 import api from "@/utils/api";
-
-const prettyCity = (slug) =>
-  String(slug || "")
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-    .join(" ");
+import {
+  getCityCandidatesFromSlug,
+  mergeUniqueProperties,
+  prettyCityFromSlug,
+} from "@/utils/communityCity";
 
 export default function CommunityCityClient({ slug = "" }) {
-  const cityName = useMemo(() => prettyCity(slug), [slug]);
+  const cityName = useMemo(() => prettyCityFromSlug(slug), [slug]);
+  const cityCandidates = useMemo(() => getCityCandidatesFromSlug(slug), [slug]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,9 +28,18 @@ export default function CommunityCityClient({ slug = "" }) {
 
       try {
         setLoading(true);
-        const { data } = await api.get(`/properties/city/${encodeURIComponent(cityName)}`);
+        const groups = await Promise.all(
+          cityCandidates.map(async (city) => {
+            try {
+              const { data } = await api.get(`/properties/city/${encodeURIComponent(city)}`);
+              return Array.isArray(data?.items) ? data.items : [];
+            } catch {
+              return [];
+            }
+          })
+        );
         if (!mounted) return;
-        setItems(Array.isArray(data?.items) ? data.items : []);
+        setItems(mergeUniqueProperties(groups));
       } catch {
         if (!mounted) return;
         setItems([]);
@@ -43,7 +52,7 @@ export default function CommunityCityClient({ slug = "" }) {
     return () => {
       mounted = false;
     };
-  }, [cityName]);
+  }, [cityName, cityCandidates]);
 
   const fallbackCommunity = {
     slug,

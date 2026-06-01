@@ -44,11 +44,18 @@ export default function Navbar() {
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
 
+  const normalizeCity = (value) => {
+    const city = String(value || "").trim();
+    if (!city) return "";
+    if (city.toLowerCase() === "new delhi") return "Delhi";
+    return city;
+  };
+
   const mapCommunitiesFromProperties = (propertyItems = []) => {
     const cityMap = new Map();
 
     propertyItems.forEach((item) => {
-      const city = String(item?.city || "").trim();
+      const city = normalizeCity(item?.city);
       if (!city) return;
 
       const key = city.toLowerCase();
